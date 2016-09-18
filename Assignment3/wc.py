@@ -37,4 +37,5 @@ for i in range(len(args)):
     filepath = syspath + args[i]
 
     if path.isfile(filepath):
-        print("Number of lines " + str(lineNum(filepath)) + "  Number of words " + str(wordNum(filepath)) + " filename " + args[i])
+        print("Number of lines " + str(lineNum(filepath)) + "  Number of words " + str(wordNum(filepath))
+              + " filename " + args[i])
