@@ -1,0 +1,7 @@
+better_addition produced exeption type <class 'IndexError'>
+
+Exeption string: list index out of range
+
+At line #: 21
+
+Test failed at try #1
