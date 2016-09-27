@@ -1,4 +1,5 @@
-from numpy import *
+##"pure" python implementation
+##todo set your own range
 from PIL import Image
 
 def mandelbrotchecker(x, y):
@@ -35,7 +36,6 @@ print(pixels)
 
 for x in range(len(a)):
     for y in range(len(b)):
-
         color_value=(mandelbrotchecker(a[x] , a[y]))
         print( str(x) + " " + str(y) + " " + " " + str(color_value))
         im.putpixel((x, y), (color_value, color_value, color_value))
