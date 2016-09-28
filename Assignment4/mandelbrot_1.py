@@ -1,6 +1,7 @@
 ##"pure" python implementation
 ##todo set your own range
 from PIL import Image
+from progressbar import *
 
 def mandelbrotchecker(x, y):
     c = complex(x, y)
@@ -40,11 +41,13 @@ while starty < endy:
 
 im = Image.new("RGB",(len(a),len(b)))
 
+pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=len(b)).start()
 for x in range(len(a)):
     for y in range(len(b)):
         color_value=(mandelbrotchecker(a[x] , a[y]))
-        print( str(x) + " " + str(y) + " " + " " + str(color_value))
         im.putpixel((x, y), (color_value, color_value, color_value))
+        pbar.update(x)
+pbar.finish()
 
 
 im.save("mandelbrot.png", "PNG")
