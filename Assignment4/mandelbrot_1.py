@@ -3,15 +3,14 @@
 from PIL import Image
 from progressbar import *
 
+stattime = time.time()
+
 def mandelbrotchecker(x, y):
     c = complex(x, y)
     z = complex(0, 0)
 
-    arr = []
-
     for x in range(1001):
         sum = z * z + c
-        arr.append(sum)
         if (abs(z) >= 2):
             return x * 10 % 255
         elif (x == 1000):
@@ -25,7 +24,7 @@ endx = 2.0
 starty = -2.0
 endy = 2.0
 
-increment = 0.01
+increment = 0.001
 
 
 a = []
@@ -49,5 +48,8 @@ for x in range(len(a)):
         pbar.update(x)
 pbar.finish()
 
-
 im.save("mandelbrot.png", "PNG")
+
+endtime = time.time()
+
+print(endtime-stattime)
