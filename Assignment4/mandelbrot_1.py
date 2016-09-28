@@ -5,34 +5,40 @@ from PIL import Image
 def mandelbrotchecker(x, y):
     c = complex(x, y)
     z = complex(0, 0)
+
     arr = []
-    for x in range(1000):
+
+    for x in range(1001):
         sum = z * z + c
         arr.append(sum)
         if (abs(z) >= 2):
             return x * 10 % 255
-        elif (x == 999):
+        elif (x == 1000):
             return 255
         z = sum
 
 
-start = -2.0
-end = 2.0
+startx = -2.0
+endx = 2.0
+
+starty = -2.0
+endy = 2.0
+
 increment = 0.01
 
-pixels = int((end/increment)*2)
 
 a = []
 b =[]
 
-im = Image.new("RGB",(pixels,pixels))
+while startx < endx:
+    a.append(startx)
+    startx = startx + increment
 
-while start < end:
-    a.append(start)
-    b.append(start)
-    start = start + increment
+while starty < endy:
+    b.append(starty)
+    starty = starty + increment
 
-print(pixels)
+im = Image.new("RGB",(len(a),len(b)))
 
 for x in range(len(a)):
     for y in range(len(b)):
