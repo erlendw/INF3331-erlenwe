@@ -1,52 +1,49 @@
 from numpy import *
 from PIL import Image
-from progressbar import *
 import time
 
 ##its fucking slower
 ##https://www.ibm.com/developerworks/community/blogs/jfp/entry/How_To_Compute_Mandelbrodt_Set_Quickly?lang=en
 
-starttime = time.time();
+height= 400
+width= 400
 
-def mandelbrotchecker(x, y):
-    c = complex(x, y)
-    z = complex(0, 0)
+def mandelbrotchecker(c):
+    z=c
 
-    for x in arange(1001):
+    for i in range(1000):
+        multiply(z,z,z)
+        z =add(z,c,z)
+        
+        print(z)
 
-        sum = z * z + c
 
-        if (abs(z) >= 2):
-            return x * 10 % 255
 
-        elif (x == 1000):
-            return 255
-        z = sum
+starttime = time.time()
 
-presicion = 0.01
-
-x = arange(-2,2, step=presicion)
-y = arange(-2,2, step=presicion)
+y,x = ogrid[ -2:2 : height*1j, -2:2:width*1j ]
 
 im = Image.new("RGB", (x.size,y.size))
 
-counterx = 0
-countery = 0
+c = x+y*1j
 
-pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=x.size).start()
+mandelbrotchecker(c)
 
-for i in nditer(x):
-    for j in nditer(y):
-        color_value = (mandelbrotchecker( x[counterx], y[countery]))
-        im.putpixel((counterx, countery), (color_value, color_value, color_value))
-        countery = countery + 1
-        pbar.update(counterx)
-    counterx += 1
-    countery = 0
+del y
+del x
+'''
+for i,j in ndenumerate(c):
+    #print(str(i) + "  " +str(j))
+    color_value = mandelbrotchecker(c[i])
+    im.putpixel((i), (color_value, color_value, color_value))
+    #print(color_value)
 
-pbar.finish()
-print("saving image")
-im.save("mandelbrot_2.png", "PNG")
+for i in arange(height):
+    for j in arange(width):
+        color_value = (mandelbrotchecker(c[i][j]))
+        im.putpixel((i, j), (color_value, color_value, color_value))
+'''
+im.save("mandelbrot_3.png", "PNG")
 endtime= time.time()
 
 print(endtime-starttime)

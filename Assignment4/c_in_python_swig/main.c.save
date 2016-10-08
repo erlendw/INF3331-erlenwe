@@ -1,0 +1,8 @@
+root@slangeserver:/var/www/inf3331/Assignment4/c_in_python_swig# nano mandelbrot.h
+root@slangeserver:/var/www/inf3331/Assignment4/c_in_python_swig# nano mandelbrot.c
+root@slangeserver:/var/www/inf3331/Assignment4/c_in_python_swig# nano main.c
+  GNU nano 2.2.6               File: main.c                           Modified
+
+#
+
+

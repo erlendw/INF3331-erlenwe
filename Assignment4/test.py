@@ -1,12 +1,15 @@
 from numpy import *
 from PIL import Image
-from progressbar import *
 import time
+from numba import cuda
 
-starttime = time.time()
+##its fucking slower
+##https://www.ibm.com/developerworks/community/blogs/jfp/entry/How_To_Compute_Mandelbrodt_Set_Quickly?lang=en
 
-def mandelbrotchecker(x, y):
-    c = complex(x, y)
+height= 400
+width= 400
+
+def mandelbrotchecker(c):
     z = complex(0, 0)
     a = arange(1000)
     counter=0
@@ -20,38 +23,23 @@ def mandelbrotchecker(x, y):
         counter+=1
 
 
-presicion = 0.1
+starttime = time.time()
 
-x = arange(-2,2, step=presicion)
-y = arange(-2,2, step=presicion)
-
-data = zeros((x.size, y.size, 3), dtype=uint8)
+y,x = ogrid[ -2:2 : height*1j, -2:2:width*1j ]
 
 im = Image.new("RGB", (x.size,y.size))
 
+c = x+y*1j
 
-counterx = 0
-countery = 0
 
-pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=x.size).start()
-
-for i in nditer(x):
-    for j in nditer(y):
-        color_value = (mandelbrotchecker( i, j))
-        im.putpixel((counterx, countery), (color_value, color_value, color_value))
-        countery = countery + 1
-        pbar.update(counterx)
-    counterx += 1
-    countery = 0
-
-for i,j in ndenumerate(data):
-    print(i , j)
-
-pbar.finish()
-endtime= time.time()
-
+for i in arange(height):
+    print(i)
+    for j in arange(width):
+        color_value = (mandelbrotchecker(c[i][j]))
+        im.putpixel((i, j), (color_value, color_value, color_value))
 
 im.save("mandelbrot_3.png", "PNG")
+endtime= time.time()
 
 print(endtime-starttime)
 

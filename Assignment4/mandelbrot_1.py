@@ -6,6 +6,7 @@ from progressbar import *
 stattime = time.time()
 
 def mandelbrotchecker(x, y):
+
     c = complex(x, y)
     z = complex(0, 0)
 
@@ -24,7 +25,7 @@ endx = 2.0
 starty = -2.0
 endy = 2.0
 
-increment = 0.001
+increment = 0.01
 
 
 a = []
