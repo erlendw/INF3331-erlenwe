@@ -2,7 +2,7 @@
 ##todo set your own range
 from PIL import Image
 from progressbar import *
-
+import time
 stattime = time.time()
 
 def mandelbrotchecker(x, y):
@@ -19,38 +19,44 @@ def mandelbrotchecker(x, y):
         z = sum
 
 
-startx = -2.0
-endx = 2.0
-
-starty = -2.0
-endy = 2.0
-
-increment = 0.01
+def createMandelbrot(startx = -2.0,endx = 2.0,starty = -2.0,endy = 2.0):
 
 
-a = []
-b =[]
+    stattime = time.time()
 
-while startx < endx:
-    a.append(startx)
-    startx = startx + increment
+    increment = 0.01
 
-while starty < endy:
-    b.append(starty)
-    starty = starty + increment
+    a = []
+    b =[]
 
-im = Image.new("RGB",(len(a),len(b)))
+    while startx < endx:
+        a.append(startx)
+        startx = startx + increment
 
-pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=len(b)).start()
-for x in range(len(a)):
-    for y in range(len(b)):
-        color_value=(mandelbrotchecker(a[x] , a[y]))
-        im.putpixel((x, y), (color_value, color_value, color_value))
-        pbar.update(x)
-pbar.finish()
+    while starty < endy:
+        b.append(starty)
+        starty = starty + increment
 
-im.save("mandelbrot.png", "PNG")
+    im = Image.new("RGB",(len(a),len(b)))
 
-endtime = time.time()
+    pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=len(b)).start()
+    for x in range(len(a)):
+        for y in range(len(b)):
+            color_value=(mandelbrotchecker(a[x] , a[y]))
+            im.putpixel((x, y), (color_value, color_value, color_value))
+            pbar.update(x)
+    pbar.finish()
 
-print(endtime-stattime)
+    im.save("mandelbrot.png", "PNG")
+
+    endtime = time.time()
+
+    print "\n total time:"
+    print(endtime-stattime)
+
+
+
+
+
+
+
