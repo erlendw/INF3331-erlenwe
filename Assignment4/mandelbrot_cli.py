@@ -18,7 +18,7 @@ def callMandelbrot3():
 
 
 def callMandelbrot4():
-    mandelbrot_4
+    mandelbrot_4.createMandelbrot()
 
 
 def printTheHelp():
