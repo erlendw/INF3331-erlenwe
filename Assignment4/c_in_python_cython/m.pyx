@@ -18,15 +18,15 @@ cdef int mandelbrotchecker(double x, double y):
         z = sum
 
 
-cpdef me(int h, int w):
+cpdef me(int h, int w, float xmin, float xmax, float ymin, float ymax):
 
     cdef np.ndarray data = np.zeros((h, w, 3), dtype=np.uint8) ##this will be the picture
-    cdef np.ndarray y = np.linspace(-2,2,w)
-    cdef np.ndarray x = np.linspace(-2,2,h)
+    cdef np.ndarray y = np.linspace(xmin,xmax,w)
+    cdef np.ndarray x = np.linspace(ymax,ymin,h)
 
     for i in range(w):
         for j in range(h):
             colorval = mandelbrotchecker(x[i], y[j])
-            data[i][j] = [colorval,colorval,colorval]
+            data[j][i] = [colorval,colorval,colorval]
 
     return data

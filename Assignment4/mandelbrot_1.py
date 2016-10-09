@@ -43,18 +43,16 @@ def createMandelbrot(startx = -2.0,endx = 2.0,starty = -2.0,endy = 2.0):
     for x in range(len(a)):
         for y in range(len(b)):
             color_value=(mandelbrotchecker(a[x] , a[y]))
-            im.putpixel((x, y), (color_value%10, color_value, color_value%200)) #140 ser bra ut
+            im.putpixel((x, y), (color_value%10, color_value, color_value%200))
             pbar.update(x)
     pbar.finish()
 
-    im.save("mandelbrot.png", "PNG")
+    im.save("mandelbrot_1.png", "PNG")
 
     endtime = time.time()
 
     print ("\n total time:")
     print(endtime-stattime)
-
-createMandelbrot()
 
 
 

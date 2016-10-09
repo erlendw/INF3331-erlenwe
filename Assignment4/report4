@@ -1,0 +1,9 @@
+The swig implementation was by far the fastest, and gave me about a 4x speed increase from cython
+
+The code is basically the same, so i don't C (see) anything else that could have been changed. For my swig implementation
+i decided to focus on the actual mandelbrotchecker functin, given that this is the heaviest computatuinal part.
+
+I prefer SWIG, although it was way harder to get started with it. I liked that it was way easier to see what was C
+and what was python.
+
+I also tested with a 4000x4000 image wich took 88 seconds compared to about 45 minutes with the code from the first assignment

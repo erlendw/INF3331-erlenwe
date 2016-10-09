@@ -1,0 +1,5 @@
+I have been very frustrated with my numpy implementation, because it's not really any faster. I think the issue is
+that i am not able to take full advantage of vectorization. My code has too many loops, and the mandlebrotchecker
+is too slow. I have found other implementations that are way faster (https://thesamovar.wordpress.com/2009/03/22/fast-fractals-with-python-and-numpy/)
+but unfortunately i do not understand this code well enough that i feel comfortable using it.
+

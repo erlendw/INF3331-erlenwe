@@ -1,50 +1,48 @@
 from numpy import *
 from PIL import Image
+from progressbar import *
 import time
 
-##its fucking slower
-##https://www.ibm.com/developerworks/community/blogs/jfp/entry/How_To_Compute_Mandelbrodt_Set_Quickly?lang=en
-
-height= 400
-width= 400
-
-def mandelbrotchecker(c):
-    z=c
-
-    for i in range(1000):
-        multiply(z,z,z)
-        z =add(z,c,z)
-        
-        print(z)
+def mandelbrotchecker(x, y):
+    c = complex(x, y)
+    z = complex(0, 0)
+    for x in arange(1001):
+        sum = z * z + c
+        if (abs(z) >= 2):
+            return x * 10 % 255
+        elif (x == 1000):
+            return 255
+        z = sum
 
 
 
-starttime = time.time()
 
-y,x = ogrid[ -2:2 : height*1j, -2:2:width*1j ]
+def createMandelbrot(startx = -2.0,endx = 2.0,starty = -2.0,endy = 2.0):
 
-im = Image.new("RGB", (x.size,y.size))
+    stattime = time.time()
 
-c = x+y*1j
+    x = arange(startx,endx, step=.01)
+    y = arange(starty,endy, step=.01)
 
-mandelbrotchecker(c)
+    im = Image.new("RGB", (x.size,y.size))
+    counterx = 0
+    countery = 0
 
-del y
-del x
-'''
-for i,j in ndenumerate(c):
-    #print(str(i) + "  " +str(j))
-    color_value = mandelbrotchecker(c[i])
-    im.putpixel((i), (color_value, color_value, color_value))
-    #print(color_value)
+    pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=x.size).start()
 
-for i in arange(height):
-    for j in arange(width):
-        color_value = (mandelbrotchecker(c[i][j]))
-        im.putpixel((i, j), (color_value, color_value, color_value))
-'''
-im.save("mandelbrot_3.png", "PNG")
-endtime= time.time()
+    for i in nditer(x):
+        for j in nditer(y):
+            color_value = (mandelbrotchecker( x[counterx], y[countery]))
+            im.putpixel((counterx, countery), (color_value, color_value, color_value))
+            countery = countery + 1
+            pbar.update(counterx)
+        counterx += 1
+        countery = 0
 
-print(endtime-starttime)
+    pbar.finish()
+    im.save("mandelbrot_2.png", "PNG")
+    endtime = time.time()
+
+    print ("\n total time:")
+    print(endtime-stattime)
 

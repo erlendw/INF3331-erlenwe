@@ -1,0 +1,5 @@
+I chose to go with cython because it was suggested from the assignment tesxt.
+
+I just about doubled my speed with the cython implementation. Here the mandelbrotchecker is implemented with a cdef
+function, and the double for loop is implemented with a cpdef function with as many declared types as possible.
+
