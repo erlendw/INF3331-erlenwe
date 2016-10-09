@@ -8,6 +8,7 @@ cdef int mandelbrotchecker(double x, double y):
     cdef complex c = complex(x, y)
     cdef complex z = c
     cdef complex sum
+    cdef int i
 
     for i in range(1001):
         sum = z*z + c

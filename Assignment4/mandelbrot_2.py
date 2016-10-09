@@ -33,7 +33,7 @@ def createMandelbrot(startx = -2.0,endx = 2.0,starty = -2.0,endy = 2.0):
     for i in nditer(x):
         for j in nditer(y):
             color_value = (mandelbrotchecker( x[counterx], y[countery]))
-            im.putpixel((counterx, countery), (color_value, color_value, color_value))
+            im.putpixel((counterx, countery), (color_value%10, color_value, color_value%255))
             countery = countery + 1
             pbar.update(counterx)
         counterx += 1

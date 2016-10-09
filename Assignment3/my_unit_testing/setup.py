@@ -1,5 +1,5 @@
 from distutils.core import setup
-setup(name='my_unit_testing',
+setup(name='mandelbrot_as_module',
       version='1337.0',
       py_modules=['addition_testing','my_unit_testing'],
       description='Skoleoppgave test som feiler',

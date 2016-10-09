@@ -4,7 +4,7 @@ cmd1="swig -python -module mandelbrot mandelbrot.h"
 eval "$cmd1"
 echo "swig complete"
 
-cmd2="gcc -fPIC -O2 -c  mandelbrot*.c -I /usr/include/python2.7/"
+cmd2="gcc -fPIC -O2 -c  mandelbrot*.c -I /usr/include/python3.5/"
 eval "$cmd2"
 echo "C files are compiled"
 
