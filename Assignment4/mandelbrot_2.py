@@ -14,9 +14,6 @@ def mandelbrotchecker(x, y):
             return 255
         z = sum
 
-
-
-
 def createMandelbrot(startx = -2.0,endx = 2.0,starty = -2.0,endy = 2.0):
 
     stattime = time.time()

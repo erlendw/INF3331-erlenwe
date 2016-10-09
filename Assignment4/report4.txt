@@ -6,4 +6,4 @@ i decided to focus on the actual mandelbrotchecker functin, given that this is t
 I prefer SWIG, although it was way harder to get started with it. I liked that it was way easier to see what was C
 and what was python.
 
-I also tested with a 4000x4000 image wich took 88 seconds compared to about 45 minutes with the code from the first assignment
+I also tested with a 4000x4000 image wich took 88 seconds compared to about 45 minutes with the code from the first task
