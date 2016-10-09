@@ -3,6 +3,7 @@
 from PIL import Image
 from progressbar import *
 import time
+
 stattime = time.time()
 
 def mandelbrotchecker(x, y):
@@ -10,14 +11,13 @@ def mandelbrotchecker(x, y):
     c = complex(x, y)
     z = complex(0, 0)
 
-    for x in range(1001):
+    for x in range(1000):
         sum = z * z + c
         if (abs(z) >= 2):
             return x * 10 % 255
-        elif (x == 1000):
-            return 255
+        elif (x == 999):
+            return 0
         z = sum
-
 
 def createMandelbrot(startx = -2.0,endx = 2.0,starty = -2.0,endy = 2.0):
 
@@ -43,7 +43,7 @@ def createMandelbrot(startx = -2.0,endx = 2.0,starty = -2.0,endy = 2.0):
     for x in range(len(a)):
         for y in range(len(b)):
             color_value=(mandelbrotchecker(a[x] , a[y]))
-            im.putpixel((x, y), (color_value, color_value, color_value))
+            im.putpixel((x, y), (color_value%10, color_value, color_value%200)) #140 ser bra ut
             pbar.update(x)
     pbar.finish()
 
@@ -51,10 +51,10 @@ def createMandelbrot(startx = -2.0,endx = 2.0,starty = -2.0,endy = 2.0):
 
     endtime = time.time()
 
-    print "\n total time:"
+    print ("\n total time:")
     print(endtime-stattime)
 
-
+createMandelbrot()
 
 
 

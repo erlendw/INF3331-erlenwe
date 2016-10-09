@@ -6,7 +6,7 @@ import imp
 
 import mandelbrot_1
 import mandelbrot_2
-from c_in import mandelbrot_3
+from  c_in_python_cython import mandelbrot_3
 
 
 def callMandelbrot1():
