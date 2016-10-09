@@ -7,18 +7,53 @@ from  c_in_python_cython import mandelbrot_3
 from  c_in_python_swig import mandelbrot_4
 
 def callMandelbrot1():
-    mandelbrot_1.createMandelbrot()
+
+
+    sx = input("input start x")
+    ex = input("input end x")
+
+    sy = input("input start y")
+    ey = input("input end y")
+
+
+
+    mandelbrot_1.createMandelbrot(sx,ex,sy,ey)
 
 def callMandelbrot2():
-    mandelbrot_2.createMandelbrot()
+
+
+    sx = input("input start x")
+    ex = input("input end x")
+
+    sy = input("input start y")
+    ey = input("input end y")
+
+    mandelbrot_2.createMandelbrot(sx,ex,sy,ey)
 
 
 def callMandelbrot3():
-    mandelbrot_3.createMandelbrot()
+
+
+
+    sx = input("input start x")
+    ex = input("input end x")
+
+    sy = input("input start y")
+    ey = input("input end y")
+
+    mandelbrot_3.createMandelbrot(sx,ex,sy,ey)
 
 
 def callMandelbrot4():
-    mandelbrot_4.createMandelbrot()
+
+
+    sx = input("input start x")
+    ex = input("input end x")
+
+    sy = input("input start y")
+    ey = input("input end y")
+
+    mandelbrot_4.createMandelbrot(sx,ex,sy,ey)
 
 
 def printTheHelp():
@@ -49,7 +84,7 @@ def printTheHelp():
 def getinput():
 
     while True:
-        theInput = raw_input()
+        theInput = input()
 
         if(theInput == ("help")):
             printTheHelp()
