@@ -1,0 +1,82 @@
+\documentclass[a4paper]{article}
+
+% Import some useful packages
+\usepackage[margin=0.5in]{geometry} % narrow margins
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\definecolor{LightGray}{gray}{0.95}
+
+\title{Peer-review of assignment 4 for \textit{INF3331-erlendwe}}
+\author{Reviewer 1, UiO-pederhot, {pederhot@uio.no}}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+\subsection{Goal}
+The review should provide feedback on the solution to the student. The main goal is to \emph{give constructive feedback and advice} on how to improve the solution. You, the peer-review team, can decide how you organise the peer-review work between you. 
+
+\subsection{Guidelines}\label{sec:general_review}
+For each (coding) exercise, one should review the following points:
+
+\begin{itemize}
+  \item Is the code \textbf{working as expected}? For non-internal functions (in particular for scripts that are run from the command-line), does the program handle invalid inputs sensibly?
+  \item Is the code \textbf{well documented}? Are there docstrings and are the useful?
+  \item Is the code written in \textbf{Pythonic way} \footnote{https://www.python.org/dev/peps/pep-0020/}? Is the code easy to read? Are the variable/class/function names sensible? Do you find overuse of classes or not sufficient use of functions or classes? Are there parts of the program that are hard to understand? 
+  \item Can you find \textbf{unnecessarily complicated parts} of the program? If so, suggest an improved implementation.
+  \item List the programming parts that are not answered.
+\end{itemize}
+Use (shortened) code snippets where appropriate to show how to improve the solution. 
+
+\subsection{Points}
+The review is completed by pushing the review Latex and PDF files to each of the reviewed repositories. The name of the files should be \emph{feedback.tex} and \emph{feedback.pdf}.
+
+You will get up to 10 points for delivering the peer-reviews. Each of you should contribute to the review roughly equivalently - your team will get the same number of points\footnote{In case a team-member does not contribute, please email \href{mailto:simon@simula.no}{simon@simula.no}}. 
+
+
+
+
+
+\section{Review }\label{sec:review}
+
+For this review I've used Python 3.5.2, and a broken numpy that I'm unable to fix.
+
+\subsection*{General feedback}
+I believe you've done a great job on this assignment, assuming that the files I could not run work the way they should! I had a hard time locating any documentation/commenting in the code. 
+You have structured your code in a good way, so it's not hard to read. Could not locate any submissions for 4.7 or 4.8. Also not looking for a 4.4 submission because the repository is INF3331.
+
+\subsection*{Assignment 4.1: Python implementation}
+Your native implementation works well! You had a progressbar implemented in the code, but this required extra modules that I did not have. Next time do provide an easy way for me to install that, so I can go on about the review without messing with new modules, as this was supposed to be "native" python. 
+Worry not though, I got the code to work after commenting out the progressbar. Other than this, a few comments here and there wouldn't hurt. The code looks clean and nice, well done! 
+
+
+\subsection*{Assignment 4.2:  numpy implementation} \label{sec:assignment5.2}
+Your numpy implementation works well, like your native one. I see that it is a bit slower than the native one, and then I stumbled upon your report on the implementation.
+In mandelbrot\_2.py you have two for-loops(one linear and one exponential, and this might be the cause to why your numpy implementation is taking longer, like you've said in your report. 
+
+\begin{itemize}
+  \item I don't see any sign of vectorization in your code, I might be blind though
+\end{itemize}
+
+
+\subsection*{Assignment 4.3: Integrated C implementation}
+I'm not able to compile the code, as the setup gives me a numpy warning that I'm not able to solve.
+
+
+
+\subsection*{Assignment 4.5: User interface}
+I try running python3 mandelbrot\_cli.py in my console, expecting it to ask me for input. It seems to start running some other code, that I cannot locate. I might be blind again, but this does not work! Please include a set of instructions next time, if it's not intuitive to run.
+
+\subsection*{Assignment 4.6:  Packaging and unit tests}
+No issues with the setup! I'm having some serious numpy problems, and am therefore not able to run the unit test on my laptop. But the unit test file does look like it would work, if I had the chance to run it. Sorry!
+
+
+
+\bibliographystyle{plain}
+\bibliography{literature}
+
+\end{document}
