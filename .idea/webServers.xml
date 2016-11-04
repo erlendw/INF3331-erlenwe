@@ -3,10 +3,11 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="6b7e5443-1113-4bd6-b121-bcaf2687f392" name="slangeserver" url="http://178.62.194.135">
-        <fileTransfer host="178.62.194.135" port="21" password="dfd9dfc6dfcbdfc4dfcddfcfdfcedfd8dfcfdfcbdfc7" username="root">
+        <fileTransfer host="178.62.194.135" port="22" rootFolder="/var/www/inf3331" accessType="SFTP">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>
+          <option name="port" value="22" />
         </fileTransfer>
       </webServer>
     </option>
