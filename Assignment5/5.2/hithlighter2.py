@@ -21,7 +21,16 @@ with open(themefile_in) as data:
     theme = json.load(data)
 
 with open(highlightfile_in, 'r') as data:
-    highlight = data.read()
+    highlight = data.readlines()
+
+
+for key in syntax:
+
+    pattern = syntax[key]
+
+    if(isinstance(pattern, list)):
+
+        for line in highlight:
 
 
 
