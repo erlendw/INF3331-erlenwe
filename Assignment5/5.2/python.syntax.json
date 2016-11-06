@@ -1,6 +1,38 @@
 {
-    "ignorecase": "['\\\"].*(\\\\bKEYWORD\\\\b).*['\\\"]",
-    "reserved": ["and", "del", "from", "not", "while", "as", "elif", "global", "or", "with", "assert", "else", "if", "pass", "yield", "break", "except", "import", "print", "class", "exec", "in", "raise", "continue", "finally", "is", "return", "def", "for", "lambda", "try"],
     "string":"['\"].*?['\"]",
-    "multiline": "^(.+)\n((?:\n.+)+)"
+    "comment":"#.*(?:$|\n)",
+    "for":"\\bfor\\b",
+    "and": "\\band\\b",
+    "del": "\\bdel\\b",
+    "from": "\\bfrom\\b",
+    "not": "\\bnot\\b",
+    "while": "\\bwhile\\b",
+    "as": "\\bas\\b",
+    "elif": "\\belif\\b",
+    "global": "\\bglobal\\b",
+    "or": "\\bor\\b",
+    "with": "\\bwith\\b",
+    "assert": "\\bassert\\b",
+    "else": "\\belse\\b",
+    "if": "\\bif\\b",
+    "pass": "\\bpass\\b",
+    "yield": "\\byield\\b",
+    "break": "\\bbreak\\b",
+    "except": "\\bexcept\\b",
+    "import": "\\bimport\\b",
+    "print": "\\bprint\\b",
+    "class": "\\bclass\\b",
+    "exec": "\\bexec\\b",
+    "in": "\\bin\\b",
+    "raise": "\\braise\\b",
+    "continue": "\\bcontinue\\b",
+    "finally": "\\bfinally\\b",
+    "is": "\\bis\\b",
+    "return": "\\breturn\\b",
+    "def": "\\bdef\\b",
+    "lambda": "\\blambda\\b",
+    "try": "\\btry\\b"
+
+
+
 }

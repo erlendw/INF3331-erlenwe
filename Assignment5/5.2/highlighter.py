@@ -9,12 +9,13 @@ args = sys.argv
 
 args.pop(0)
 
-syntaxfile_in = syspath + args[0] + ".json"
+sytaxfile_in = syspath + args[0] + ".json"
 themefile_in = syspath + args[1] + ".json"
 highlightfile_in = syspath + args[2]
 
 
-with open(syntaxfile_in) as data:
+
+with open(sytaxfile_in) as data:
     syntax = json.load(data)
 
 with open(themefile_in) as data:
@@ -22,39 +23,17 @@ with open(themefile_in) as data:
 
 with open(highlightfile_in, 'r') as data:
     highlight = data.read()
-
+    #highlight = data.readlines()
 new = highlight
-ignorecase = syntax['ignorecase']
-print(ignorecase)
 for key in syntax:
 
-    if(isinstance(syntax[key], list)):
+    print(syntax[key])
 
-        for i in range(len(syntax[key])):
-            pattern = (syntax[key][i])
-            color_ = int(theme[key])
-            replaced = re.sub('\\b'+ pattern +'\\b',  color(pattern, color_), new)
-            new = replaced
+    pattern = (syntax[key])
+    match = re.findall(pattern , highlight)
 
-    else:
-        pattern = (syntax[key])
-        color_ = int(theme[key])
-        match = re.findall(pattern , new, re.DOTALL)
+    for i in match:
+        replaced = (new.replace(i, color(i, fg=theme[key])))
+        new = replaced
 
-        print(match)
-
-        '''
-        for j in match:
-            replaced = re.sub(j,  color(j, fg=color_), new)#(new.replace(i, color(i, fg=color_)))
-            new = replaced
-        '''
-
-
-"""
-
-dette er en comment
-
-python.syntax python.theme rpn.py
-
-"""
-
+print( "\n Colored verison: \n\n" + new)
