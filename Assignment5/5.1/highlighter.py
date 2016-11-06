@@ -22,19 +22,39 @@ with open(themefile_in) as data:
 
 with open(highlightfile_in, 'r') as data:
     highlight = data.read()
-    #highlight = data.readlines()
-
 
 new = highlight
+ignorecase = syntax['ignorecase']
+print(ignorecase)
 for key in syntax:
 
-    pattern = (syntax[key])
-    color_ = int(theme[key])
+    if(isinstance(syntax[key], list)):
 
-    match = re.findall(pattern , highlight)
+        for i in range(len(syntax[key])):
+            pattern = (syntax[key][i])
+            color_ = int(theme[key])
+            replaced = re.sub('\\b'+ pattern +'\\b',  color(pattern, color_), new)
+            new = replaced
 
-    for i in match:
-        replaced = (new.replace(i, color(i, fg=color_)))
-        new = replaced
+    else:
+        pattern = (syntax[key])
+        color_ = int(theme[key])
+        match = re.findall(pattern , new, re.DOTALL)
 
-print( "\n Colored verison: \n\n" + new)
+        print(match)
+
+        '''
+        for j in match:
+            replaced = re.sub(j,  color(j, fg=color_), new)#(new.replace(i, color(i, fg=color_)))
+            new = replaced
+        '''
+
+
+"""
+
+dette er en comment
+
+python.syntax python.theme rpn.py
+
+"""
+
