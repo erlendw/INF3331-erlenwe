@@ -1,0 +1,75 @@
+\documentclass[a4paper]{article}
+
+% Import some useful packages
+\usepackage[margin=0.5in]{geometry} % narrow margins
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\definecolor{LightGray}{gray}{0.95}
+
+\title{Peer-review of assignment 5 for \textit{INF3331-erlenwe}}
+\author{Reviewer 1, bartasv, {bartasv@uio.no} \\
+ 		Reviewer 2, danieen, {danieen@uio.no} \\
+		Reviewer 3, yast, {yast@uio.no}}
+
+\begin{document}
+\maketitle
+
+\section{Review}\label{sec:review}
+
+Specify the system (Python version, operating system, ...) that was used for the review. \newline
+Python: 3.0				Operating system: macOS Sierra (10.12)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{General feedback}
+The code needs more documentation. This will make it easier for us, the reviewers, to understand what you intend to accomplish with your code.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.1: Syntax highlighting}
+We couldn't run highlighter.py and we don't understand why you used json.
+
+\begin{minted}[bgcolor=LightGray, linenos, fontsize=\footnotesize]{python}
+Traceback (most recent call last):
+  File "highlighter.py", line 4, in <module>
+    from colors import color
+ImportError: No module named 'colors'
+\end{minted}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.2: Python syntax} \label{sec:assignment5.2}
+Again: we don't understand why you used json.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.3: Syntax for your favorite language}
+No answer for this programming part.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.4: Syntax for your second favorite language}
+No answer for this programming part.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.5: superdiff}
+The code is working as expected, but it isn't documented at all. This sample of your code: \newline
+\begin{minted}[bgcolor=LightGray, linenos, fontsize=\footnotesize]{python}
+for i in range(len(original) + 1):
+    row = []
+    for j in range(len(modified) + 1):
+        row.append(0)
+    matrix.append(row)
+\end{minted}
+\newline could have been written in one line: \newline
+\begin{minted}[bgcolor=LightGray, linenos, fontsize=\footnotesize]{python}
+matrix = [[0 for i in range(len(original)+1)] for j in range(len(modified)+1)]
+\end{minted}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.6:  Coloring diff}
+No answer for this programming part.
+
+
+\bibliographystyle{plain}
+\bibliography{literature}
+
+\end{document}
