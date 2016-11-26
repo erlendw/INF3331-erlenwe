@@ -9,8 +9,9 @@ app = Flask(__name__)
 CORS(app)
 
 #the crunching is supposed to happen in python
-@app.route("/getCo2")
+@app.route('/getCo2')
 def getCo2():
+
     x = []
     y = []
 
@@ -29,9 +30,9 @@ def getCo2():
 
 
 #the crunching is supposed to happen in python
+@app.route('/getTemp')
 @app.route('/getTemp/<int:month>')
-
-def getTemp(month):
+def getTemp(month=1):
 
     x = []
     y = []
