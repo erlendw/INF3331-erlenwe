@@ -101,7 +101,10 @@ def getTemp(month=1):
         except KeyError:
             month = 1
 
+
     print(month)
+
+
 
     x = []
     y = []
@@ -166,6 +169,17 @@ def getTemp(month=1):
             y.append(float(line[month]))
 
     return json.dumps({'years': x, 'meanTemperature': y, 'month': months[month - 1]})
+
+
+@app.errorhandler(500)
+def internal_error(error):
+
+    return "500 error"
+
+@app.errorhandler(404)
+def not_found(error):
+    return "404 error",404
+
 
 if __name__ == "__main__":
     app.run()
