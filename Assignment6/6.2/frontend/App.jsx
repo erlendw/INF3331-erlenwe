@@ -3,11 +3,17 @@ import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Form, FormGroup, Col, Form
 import superagent from 'superagent';
 
 
-import Header from './containers/header';
+
 import text from './styles/text.css'
 
-import Temperature from './containers/Temperature';
-import Co2 from './containers/Co2';
+import Header from './containers/header';
+
+import Temperature_62 from './containers/6.2/Temperature';
+import Co2_62 from './containers/6.2/Co2';
+
+
+import Temperature_63 from './containers/6.3/Temperature';
+import Co2_63 from './containers/6.3/Co2';
 
 import {Router,Route, browserHistory } from 'react-router';
 
@@ -22,8 +28,10 @@ class App extends React.Component {
             <Header/>
             <Router history={browserHistory}>
                 <Route>
-                    <Route path="temp" component={Temperature}/>
-                    <Route path="co2"  component={Co2}/>
+                    <Route path="/temp_62" component={Temperature_62}/>
+                    <Route path="/co2_62"  component={Co2_62}/>
+                    <Route path="/temp_63" component={Temperature_63}/>
+                    <Route path="/co2_63"  component={Co2_63}/>
                 </Route>
             </Router>
             </div>
