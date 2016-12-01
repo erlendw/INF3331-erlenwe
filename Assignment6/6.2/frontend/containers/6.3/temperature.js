@@ -1,16 +1,29 @@
 import React from 'react'
 import ReactDOM from 'react-dom';
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import { getTemperature } from '../../actions/actions'
-import { Grid, Row, Col, DropdownButton, MenuItem } from 'react-bootstrap'
-import chatstyle from '../../styles/chatwindow.css'
-import Chart from 'chart.js';
+import {bindActionCreators} from 'redux'
+import {connect} from 'react-redux'
+import {getTemperature} from '../../actions/actions'
+import {Grid, Row, Col, DropdownButton, MenuItem, FormGroup, FormControl, Form, ControlLabel} from 'react-bootstrap'
+import graph from '../../styles/graph.css'
 
 var myChart;
 
 
 class Temperature extends React.Component {
+
+
+    constructor() {
+        super();
+        this.state = {
+
+            name: '',
+            shortName: '',
+            displayName: '',
+            displayShortName: ''
+
+        };
+    }
+
 
     updateCanvas() {
         let canvas = ReactDOM.findDOMNode(this.refs.myCanvas);
@@ -65,30 +78,89 @@ class Temperature extends React.Component {
         var months = ["January", "February", "March", "April", "May",
             "June", "July", "August", "September", "October", "November", "December"]
 
-        var options = { responsive: true, showTooltips: false, fill: false }
+        return ( <div>
 
-        return (<div className={"container"}>
+                <div className={graph.graph}>
+                    <canvas ref="myCanvas"/>
+                </div>
+
+                <div className={graph.sidebar}>
 
 
-            <canvas ref="myCanvas" />
+                    <Form horizontal onSubmit={(e) => {
+                        this.handleSubmit(e)
+                    }}>
 
-            <Row>
+                        <FormGroup controlId="name" onSubmit={(e) => {
+                            this.handleSubmit(e)
+                        }}>
+                            <Col componentClass={ControlLabel} sm={4}>
+                                Month
+                            </Col>
+                            <Col sm={6}>
+                                <DropdownButton title={this.props.temperature.month} id="bg-nested-dropdown">
+                                    {months.map((val, index) => {
+                                        return <MenuItem key={index} onClick={() => {
+                                            this.dropdownChanged(index)
+                                        } }>{val}</MenuItem>
+                                    })}
 
-                <Col>
-                    <DropdownButton title={this.props.temperature.month} id="bg-nested-dropdown">
-                        {months.map((val, index) => {
-                            return <MenuItem key={index} onClick={() => { this.dropdownChanged(index) } }>{val}</MenuItem>
-                        })}
+                                </DropdownButton>
 
-                    </DropdownButton>
-                </Col>
+                            </Col>
+                        </FormGroup>
 
-                <Col>
-                    erlend westbye
-            </Col>
+                        <FormGroup controlId="name" onSubmit={(e) => {
+                            this.handleSubmit(e)
+                        }}>
+                            <Col componentClass={ControlLabel} sm={4}>
+                                Name
+                            </Col>
+                            <Col sm={6}>
+                                <FormControl value={this.state.name} onChange={(e) => {
+                                    this.handleChange(e)
+                                }}/>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup controlId="shortName">
+                            <Col componentClass={ControlLabel} sm={4}>
+                                Short name
+                            </Col>
+                            <Col sm={6}>
+                                <FormControl value={this.state.shortName} onChange={(e) => {
+                                    this.handleChange(e)
+                                }}/>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup controlId="displayName" onSubmit={(e) => {
+                            this.handleSubmit(e)
+                        }}>
+                            <Col componentClass={ControlLabel} sm={4}>
+                                Display name
+                            </Col>
+                            <Col sm={6}>
+                                <FormControl value={this.state.displayName} onChange={(e) => {
+                                    this.handleChange(e)
+                                }}/>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup controlId="displayShortName">
+                            <Col componentClass={ControlLabel} sm={4}>
+                                Short display name
+                            </Col>
+                            <Col sm={6}>
+                                <FormControl value={this.state.displayShortName} onChange={(e) => {
+                                    this.handleChange(e)
+                                }}/>
+                            </Col>
+                        </FormGroup>
 
-            </Row>
-        </div>
+                    </Form>
+
+                </div>
+
+
+            </div>
         )
     }
 }
@@ -103,7 +175,7 @@ function mapStateToProps(state) {
 
 // matches the dispatch/actions to the prop object
 function matchDispatchToProps(dispatch) {
-    return bindActionCreators({ getTemperature: getTemperature }, dispatch)
+    return bindActionCreators({getTemperature: getTemperature}, dispatch)
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(Temperature);

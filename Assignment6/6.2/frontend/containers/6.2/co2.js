@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import {getCo2} from '../../actions/actions'
 import { Grid, Row, Col } from 'react-bootstrap'
-import chatstyle from '../../styles/chatwindow.css'
+import graph from '../../styles/graph.css'
 
 var myChart;
 
@@ -13,6 +13,7 @@ class Co2 extends React.Component{
     updateCanvas() {
         let canvas = ReactDOM.findDOMNode(this.refs.myCanvas);
         let ctx = canvas.getContext('2d');
+        ctx.height = 768;
 
         if(myChart == undefined){
             myChart = new Chart(ctx, {
@@ -30,7 +31,8 @@ class Co2 extends React.Component{
     options: {
        hover: {
             // Overrides the global setting
-            mode: 'nearest'
+            mode: 'nearest',
+           responsive: true
         }
     }
         });
@@ -55,9 +57,16 @@ class Co2 extends React.Component{
 
     render() {
 
-        return (<div className={"container"}>
+        return (<div>
 
-            <canvas ref="myCanvas" />
+                <div className={"container"}>
+
+                    <canvas ref="myCanvas" />
+
+                </div>
+
+
+
         </div>
         )
     }

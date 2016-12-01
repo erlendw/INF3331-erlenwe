@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import {getCo2} from '../../actions/actions'
 import { Grid, Row, Col } from 'react-bootstrap'
-import chatstyle from '../../styles/chatwindow.css'
+import chatstyle from '../../styles/graph.css'
 
 var myChart;
 
@@ -55,9 +55,19 @@ class Co2 extends React.Component{
 
     render() {
 
-        return (<div className={"container"}>
 
-            <canvas ref="myCanvas" />
+        return (<div className={graph.inline}>
+
+                <div className={graph.graph}>
+
+                    <canvas ref="myCanvas" />
+
+
+                </div>
+
+                <div className={graph.sidebar}></div>
+
+
         </div>
         )
     }

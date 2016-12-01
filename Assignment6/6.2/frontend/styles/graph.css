@@ -1,0 +1,24 @@
+ .graph
+    {
+        width: calc(75vw);
+     float: left;
+    }
+
+
+ .sidebar{
+
+     background: rgba(137,196,244, 1);
+     width: calc(25vw);
+     height: calc(100vh - 50px);
+     position: fixed;
+     right: 0;
+     float: right;
+     margin-top: -20px;
+     padding :10px;
+ }
+
+
+ .inline{
+
+     display: inline-block;
+ }
