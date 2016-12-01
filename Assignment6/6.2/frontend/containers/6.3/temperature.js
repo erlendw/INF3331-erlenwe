@@ -1,29 +1,52 @@
-import React from 'react'
-import ReactDOM from 'react-dom';
-import {bindActionCreators} from 'redux'
-import {connect} from 'react-redux'
-import {getTemperature} from '../../actions/actions'
-import {Grid, Row, Col, DropdownButton, MenuItem, FormGroup, FormControl, Form, ControlLabel} from 'react-bootstrap'
-import graph from '../../styles/graph.css'
+import React from "react";
+import ReactDOM from "react-dom";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
+import {getTemperature, getTemperature_Param} from "../../actions/actions";
+import {
+    Grid,
+    Row,
+    Col,
+    DropdownButton,
+    MenuItem,
+    FormGroup,
+    FormControl,
+    Form,
+    ControlLabel,
+    Button
+} from "react-bootstrap";
+import graph from "../../styles/graph.css";
 
 var myChart;
-
+var toSend
 
 class Temperature extends React.Component {
 
 
     constructor() {
         super();
-        this.state = {
-
-            name: '',
-            shortName: '',
-            displayName: '',
-            displayShortName: ''
-
+        toSend = {
+            month: 1,
+            updateCanvas: true,
+            y_min: '',
+            y_max: '',
+            x_min: '',
+            x_max: ''
         };
     }
 
+    handleSubmit(){
+
+      console.log(toSend)
+      this.props.getTemperature_Param(this.state);
+
+      this.setState({
+            updateCanvas : true
+        })
+
+
+
+    }
 
     updateCanvas() {
         let canvas = ReactDOM.findDOMNode(this.refs.myCanvas);
@@ -66,11 +89,56 @@ class Temperature extends React.Component {
     }
 
     componentDidUpdate() {
-        this.updateCanvas();
+
+        if (this.state.updateCanvas) {
+
+            this.updateCanvas();
+            this.setState({
+                updateCanvas: false
+            })
+        }
+
     }
 
     dropdownChanged(index) {
-        this.props.getTemperature(index + 1);
+        this.setState({
+
+            month: (index + 1)
+
+        })
+
+        console.log(this.state)
+    }
+
+    handleChange(e) {
+
+        switch (e.target.id) {
+
+            case 'y_min':
+
+                this.setState({
+                    y_min: e.target.value
+                });
+                break;
+            case 'y_max':
+
+                this.setState({
+                    y_max: e.target.value
+                });
+                break;
+            case 'x_min':
+
+                this.setState({
+                    x_min: e.target.value
+                });
+                break;
+            case 'x_max':
+
+                this.setState({
+                    x_max: e.target.value
+                });
+                break;
+        }
     }
 
 
@@ -87,18 +155,15 @@ class Temperature extends React.Component {
                 <div className={graph.sidebar}>
 
 
-                    <Form horizontal onSubmit={(e) => {
-                        this.handleSubmit(e)
-                    }}>
+                    <Form horizontal>
 
-                        <FormGroup controlId="name" onSubmit={(e) => {
-                            this.handleSubmit(e)
-                        }}>
+                        <FormGroup controlId="month">
                             <Col componentClass={ControlLabel} sm={4}>
                                 Month
                             </Col>
                             <Col sm={6}>
-                                <DropdownButton title={this.props.temperature.month} id="bg-nested-dropdown">
+
+                                <DropdownButton title={months[toSend.month - 1]} id="bg-nested-dropdown">
                                     {months.map((val, index) => {
                                         return <MenuItem key={index} onClick={() => {
                                             this.dropdownChanged(index)
@@ -110,52 +175,66 @@ class Temperature extends React.Component {
                             </Col>
                         </FormGroup>
 
-                        <FormGroup controlId="name" onSubmit={(e) => {
-                            this.handleSubmit(e)
-                        }}>
+                        <FormGroup controlId="y_min">
                             <Col componentClass={ControlLabel} sm={4}>
                                 Y min (co2)
                             </Col>
                             <Col sm={6}>
-                                <FormControl value={this.state.name} onChange={(e) => {
+                                <FormControl type="number" value={toSend.y_min} onChange={(e) => {
                                     this.handleChange(e)
                                 }}/>
                             </Col>
                         </FormGroup>
-                        <FormGroup controlId="shortName">
+                        <FormGroup controlId="y_max">
                             <Col componentClass={ControlLabel} sm={4}>
                                 Y max (temp)
                             </Col>
                             <Col sm={6}>
-                                <FormControl value={this.state.shortName} onChange={(e) => {
-                                    this.handleChange(temp)
-                                }}/>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup controlId="displayName" onSubmit={(e) => {
-                            this.handleSubmit(e)
-                        }}>
-                            <Col componentClass={ControlLabel} sm={4}>
-                                X min (years)
-                            </Col>
-                            <Col sm={6}>
-                                <FormControl value={this.state.displayName} onChange={(e) => {
+                                <FormControl type="number" value={this.state.y_max} onChange={(e) => {
                                     this.handleChange(e)
                                 }}/>
                             </Col>
                         </FormGroup>
-                        <FormGroup controlId="displayShortName">
+                        <FormGroup controlId="x_min">
+                            <Col componentClass={ControlLabel} sm={4}>
+                                X min (years)
+                            </Col>
+                            <Col sm={6}>
+                                <FormControl type="number" value={this.state.x_min} onChange={(e) => {
+                                    this.handleChange(e)
+                                }}/>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup controlId="x_max">
                             <Col componentClass={ControlLabel} sm={4}>
                                 X max (years)
                             </Col>
                             <Col sm={6}>
-                                <FormControl value={this.state.displayShortName} onChange={(e) => {
+                                <FormControl type="number" value={this.state.x_max} onChange={(e) => {
                                     this.handleChange(e)
                                 }}/>
                             </Col>
                         </FormGroup>
 
+
+                        <FormGroup controlId="buttons">
+
+                            <Col componentClass={ControlLabel} sm={4}>
+                                Submit
+                            </Col>
+                            <Col sm={6}>
+                                <Button
+                                    onClick={() => {
+                                        this.handleSubmit()
+                                    }}
+                                >Submit</Button>
+                            </Col>
+
+
+                        </FormGroup>
+
                     </Form>
+
 
                 </div>
 
@@ -175,7 +254,7 @@ function mapStateToProps(state) {
 
 // matches the dispatch/actions to the prop object
 function matchDispatchToProps(dispatch) {
-    return bindActionCreators({getTemperature: getTemperature}, dispatch)
+    return bindActionCreators({getTemperature: getTemperature, getTemperature_Param : getTemperature_Param}, dispatch)
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(Temperature);

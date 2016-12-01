@@ -3,7 +3,7 @@ from flask import request
 from flask_cors import CORS, cross_origin
 import csv
 import json
-
+from flask import jsonify
 
 
 app = Flask(__name__)
@@ -96,8 +96,14 @@ def getTemp(month=1):
 
 
     if (request.method == 'POST'):
+
+        result = request.get_json()
+
+        print(result)
+
+
         try:
-            month = int(request.form['month'])
+            month = int(result['month'])
         except KeyError:
             month = 1
 
@@ -141,13 +147,13 @@ def getTemp(month=1):
 
     if (request.method == 'POST'):
 
-        for key in request.form:
+        for key in result:
             try:
                 """"
                 if the dict[key] excists it is replaced by the incoming max min
                 """
 
-                graph_dict[key] = int(request.form[key])
+                graph_dict[key] = int(result[key])
             except KeyError:
                 print('not in dict')
 
@@ -182,4 +188,5 @@ def not_found(error):
 
 
 if __name__ == "__main__":
+    app.debug = True
     app.run()

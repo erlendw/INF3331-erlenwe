@@ -1,0 +1,9 @@
+.header{
+
+    position: static;
+    top: 0;
+    left: 0;
+    width:25vw;
+    background: rgba(210, 215, 211, 0.7);
+    height:75px;
+}

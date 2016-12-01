@@ -3,7 +3,7 @@ import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Form, FormGroup, Col, Form
 import superagent from 'superagent';
 
 
-
+import header from './styles/header.css'
 import text from './styles/text.css'
 
 import Header from './containers/header';
@@ -25,7 +25,7 @@ class App extends React.Component {
     render() {
         return (
             <div>
-            <Header/>
+            <div className={header.header}></div>
             <Router history={browserHistory}>
                 <Route>
                     <Route path="/temp_62" component={Temperature_62}/>
