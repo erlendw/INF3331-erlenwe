@@ -18,14 +18,15 @@ import {
 import graph from "../../styles/graph.css";
 
 var myChart;
-var toSend
+var oldData;
+
 
 class Temperature extends React.Component {
 
 
     constructor() {
         super();
-        toSend = {
+        this.state = {
             month: 1,
             updateCanvas: true,
             y_min: '',
@@ -37,14 +38,14 @@ class Temperature extends React.Component {
 
     handleSubmit(){
 
-      console.log(toSend)
-      this.props.getTemperature_Param(this.state);
+        console.log(this.state)
 
-      this.setState({
+        oldData = this.props.temperature;
+
+        this.props.getTemperature_Param(this.state);
+        this.setState({
             updateCanvas : true
         })
-
-
 
     }
 
@@ -90,12 +91,12 @@ class Temperature extends React.Component {
 
     componentDidUpdate() {
 
-        if (this.state.updateCanvas) {
+        console.log(oldData === this.props.temperature )
+
+        if (!(oldData === this.props.temperature )) {
 
             this.updateCanvas();
-            this.setState({
-                updateCanvas: false
-            })
+            oldData = this.props.temperature;
         }
 
     }
@@ -105,7 +106,7 @@ class Temperature extends React.Component {
 
             month: (index + 1)
 
-        })
+        });
 
         console.log(this.state)
     }
@@ -163,7 +164,7 @@ class Temperature extends React.Component {
                             </Col>
                             <Col sm={6}>
 
-                                <DropdownButton title={months[toSend.month - 1]} id="bg-nested-dropdown">
+                                <DropdownButton title={months[this.state.month -1]} id="bg-nested-dropdown">
                                     {months.map((val, index) => {
                                         return <MenuItem key={index} onClick={() => {
                                             this.dropdownChanged(index)
@@ -180,7 +181,7 @@ class Temperature extends React.Component {
                                 Y min (co2)
                             </Col>
                             <Col sm={6}>
-                                <FormControl type="number" value={toSend.y_min} onChange={(e) => {
+                                <FormControl type="number" value={this.state.y_min} onChange={(e) => {
                                     this.handleChange(e)
                                 }}/>
                             </Col>
@@ -227,7 +228,7 @@ class Temperature extends React.Component {
                                     onClick={() => {
                                         this.handleSubmit()
                                     }}
-                                >Submit</Button>
+                                >Update chart</Button>
                             </Col>
 
 
