@@ -16,9 +16,23 @@ class Header extends React.Component {
         return (<Navbar>
             <Navbar.Header>
                 <Navbar.Brand>
-                    <a href="#">React-Bootstrap</a>
+                    <a href="#">EW scientific</a>
                 </Navbar.Brand>
             </Navbar.Header>
+
+        </Navbar>)
+
+
+
+    }
+
+}
+
+export default Header;
+
+
+/*
+
             <Nav>
                 <NavItem eventKey={1} href="#">Link</NavItem>
                 <NavItem eventKey={2} href="#">Link</NavItem>
@@ -30,12 +44,5 @@ class Header extends React.Component {
                     <MenuItem eventKey={3.3}>Separated link</MenuItem>
                 </NavDropdown>
             </Nav>
-        </Navbar>)
 
-
-
-    }
-
-}
-
-export default Header;
+* */

@@ -1,24 +1,28 @@
  .graph
     {
         width: calc(75vw);
-     float: left;
+        float: left;
+        padding: 10px;
     }
 
 
  .sidebar{
-
-     background: rgba(137,196,244, 1);
+     color:white;
+     background: rgba(52,73,94, 0.9);
      width: calc(25vw);
      height: calc(100vh - 50px);
      position: fixed;
      right: 0;
      float: right;
      margin-top: -20px;
-     padding :10px;
+
+     padding-top: 40px;
+     padding-left:10px;
+
+     box-shadow: inset 1px 1px 3px #999;
  }
 
 
  .inline{
-
      display: inline-block;
  }

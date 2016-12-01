@@ -114,7 +114,7 @@ class Temperature extends React.Component {
                             this.handleSubmit(e)
                         }}>
                             <Col componentClass={ControlLabel} sm={4}>
-                                Name
+                                Y min (co2)
                             </Col>
                             <Col sm={6}>
                                 <FormControl value={this.state.name} onChange={(e) => {
@@ -124,11 +124,11 @@ class Temperature extends React.Component {
                         </FormGroup>
                         <FormGroup controlId="shortName">
                             <Col componentClass={ControlLabel} sm={4}>
-                                Short name
+                                Y max (temp)
                             </Col>
                             <Col sm={6}>
                                 <FormControl value={this.state.shortName} onChange={(e) => {
-                                    this.handleChange(e)
+                                    this.handleChange(temp)
                                 }}/>
                             </Col>
                         </FormGroup>
@@ -136,7 +136,7 @@ class Temperature extends React.Component {
                             this.handleSubmit(e)
                         }}>
                             <Col componentClass={ControlLabel} sm={4}>
-                                Display name
+                                X min (years)
                             </Col>
                             <Col sm={6}>
                                 <FormControl value={this.state.displayName} onChange={(e) => {
@@ -146,7 +146,7 @@ class Temperature extends React.Component {
                         </FormGroup>
                         <FormGroup controlId="displayShortName">
                             <Col componentClass={ControlLabel} sm={4}>
-                                Short display name
+                                X max (years)
                             </Col>
                             <Col sm={6}>
                                 <FormControl value={this.state.displayShortName} onChange={(e) => {
