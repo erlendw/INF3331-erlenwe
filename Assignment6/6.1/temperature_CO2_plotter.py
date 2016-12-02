@@ -2,10 +2,8 @@ import csv
 
 import matplotlib.pyplot as plt
 
-import numpy as np
-
-import pandas as pd
-
+import matplotlib
+matplotlib.style.use('ggplot')
 
 '''
 Todo :: add time range, x and y min/max
@@ -95,26 +93,26 @@ def plot_co2(x_min=None, x_max=None, y_min=None, y_max=None):
 
 
 """
-Given a year: say 1960 we want to wxtract all valid datasets x:contry and y:co2 for that year
+Given a year_index: say 1960 we want to wxtract all valid datasets x:contry and y:co2 for that year_index
 """
 
-def plot_co2_by_contry(year="1960", y_min="0",y_max ="3"):
+def plot_co2_by_contry(year="2012", y_min="0",y_max ="100"):
 
     contry = []#contry
     allCo2perContry = []
     availableYears = []
 
     x = []#contry
-    y = []#co2 / year
+    y = []#co2 / year_index
     y_indexes = []
-
+    yindex = 0
     with open('CO2_by_country.csv', 'r') as co2:
         readerofthecsv = csv.reader(co2, delimiter=',')
         readerofthecsv = list(readerofthecsv)
 
         for i in range(len(readerofthecsv)):
             dataPerYear = readerofthecsv[i][4:len(readerofthecsv)] # this is all the available data for a contry
-            #based on the year we want to add one data point from the list above
+            #based on the year_index we want to add one data point from the list above
 
             if(i == 0 ):
                 availableYears = dataPerYear
@@ -124,26 +122,23 @@ def plot_co2_by_contry(year="1960", y_min="0",y_max ="3"):
                 contry.append(readerofthecsv[i][0])
                 allCo2perContry.append(dataPerYear)
 
-
-        # for every contry we want to get the data for a given year if all the fields are valid
+        # for every contry we want to get the data for a given year_index if all the fields are valid
         for j in range(len(contry)):
             if (not isBlank(availableYears[yearIndex]) and not isBlank(contry[j]) and not isBlank(allCo2perContry[j][yearIndex])):
                 # print(x[i],contry[j], y[j][i])
-
-
                 lessThanMax = (float(allCo2perContry[j][yearIndex] ) < float(y_max))
-
                 moreThanMin = (float(allCo2perContry[j][yearIndex]) > float(y_min))
-
                 if(lessThanMax and moreThanMin):
                     x.append(contry[j])
                     y.append(float(allCo2perContry[j][yearIndex]))
-                    y_indexes.append(j)
+                    y_indexes.append(yindex)
+                    yindex+=1
 
 
     print(y)
 
-    plt.bar(y_indexes, y, width=0.35 , align='center')
+    plt.xticks(y_indexes, x, rotation='vertical')
+    plt.bar(y_indexes, y, width=1 , align='center')
 
     mng = plt.get_current_fig_manager()
     mng.resize(*mng.window.maxsize())

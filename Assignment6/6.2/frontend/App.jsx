@@ -15,6 +15,8 @@ import Co2_62 from './containers/6.2/Co2';
 import Temperature_63 from './containers/6.3/Temperature';
 import Co2_63 from './containers/6.3/Co2';
 
+import Co2_Contry from './containers/6.4/co2_contry';
+
 import {Router,Route, browserHistory } from 'react-router';
 
 
@@ -32,6 +34,7 @@ class App extends React.Component {
                     <Route path="/co2_62"  component={Co2_62}/>
                     <Route path="/temp_63" component={Temperature_63}/>
                     <Route path="/co2_63"  component={Co2_63}/>
+                    <Route path="/co2_contry"  component={Co2_Contry}/>
                 </Route>
             </Router>
             </div>

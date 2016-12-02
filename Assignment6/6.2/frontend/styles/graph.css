@@ -9,6 +9,15 @@
 
 }
 
+.graphhorizontal {
+    width: calc(75vw);
+    float: right;
+    padding: 10px;
+    right: 0;
+    height:100vh;
+
+}
+
 .sidebar {
     color: white;
     background: rgba(52, 73, 94, 0.9);
@@ -27,3 +36,4 @@
 .inline {
     display: inline-block;
 }
+

@@ -21,7 +21,7 @@ var myChart;
 var oldData;
 
 
-class Temperature extends React.Component {
+class Co2 extends React.Component {
 
 
     constructor() {
@@ -73,7 +73,7 @@ class Temperature extends React.Component {
                 data: {
                     labels: this.props.Co2.years,
                     datasets: [{
-                        label: 'Co2 per year',
+                        label: 'Co2 per year_index',
                         data: this.props.Co2.arbitraryCo2Units,
                         backgroundColor: 'rgba(68, 108, 179, 0.2)',
                         borderColor: 'rgba(68, 108, 179,1)',
@@ -92,9 +92,9 @@ class Temperature extends React.Component {
 
         else {
 
-            myChart.destroy()
+            myChart.destroy();
             myChart = undefined;
-            this.updateCanvas()
+            this.updateCanvas();
 
         }
     }
@@ -260,4 +260,4 @@ function matchDispatchToProps(dispatch) {
     return bindActionCreators({getCo2: getCo2, getCo2_Param: getCo2_Param}, dispatch)
 }
 
-export default connect(mapStateToProps, matchDispatchToProps)(Temperature);
+export default connect(mapStateToProps, matchDispatchToProps)(Co2);
