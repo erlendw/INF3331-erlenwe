@@ -36,7 +36,7 @@ class Temperature extends React.Component {
         };
     }
 
-    handleSubmit(){
+    handleSubmit() {
 
         console.log(this.state)
 
@@ -44,9 +44,25 @@ class Temperature extends React.Component {
 
         this.props.getTemperature_Param(this.state);
         this.setState({
-            updateCanvas : true
+            updateCanvas: true
         })
 
+    }
+
+
+        handleReset(){
+
+        this.setState({
+            month: 1,
+            updateCanvas: true,
+            y_min: '',
+            y_max: '',
+            x_min: '',
+            x_max: ''
+
+        });
+
+        this.props.getTemperature(1)
     }
 
     updateCanvas() {
@@ -91,7 +107,7 @@ class Temperature extends React.Component {
 
     componentDidUpdate() {
 
-        console.log(oldData === this.props.temperature )
+        console.log(oldData === this.props.temperature)
 
         if (!(oldData === this.props.temperature )) {
 
@@ -164,7 +180,7 @@ class Temperature extends React.Component {
                             </Col>
                             <Col sm={6}>
 
-                                <DropdownButton title={months[this.state.month -1]} id="bg-nested-dropdown">
+                                <DropdownButton title={months[this.state.month - 1]} id="bg-nested-dropdown">
                                     {months.map((val, index) => {
                                         return <MenuItem key={index} onClick={() => {
                                             this.dropdownChanged(index)
@@ -178,7 +194,7 @@ class Temperature extends React.Component {
 
                         <FormGroup controlId="y_min">
                             <Col componentClass={ControlLabel} sm={4}>
-                                Y min (co2)
+                                Y min (temp)
                             </Col>
                             <Col sm={6}>
                                 <FormControl type="number" value={this.state.y_min} onChange={(e) => {
@@ -198,7 +214,7 @@ class Temperature extends React.Component {
                         </FormGroup>
                         <FormGroup controlId="x_min">
                             <Col componentClass={ControlLabel} sm={4}>
-                                X min (years)
+                                X min (year)
                             </Col>
                             <Col sm={6}>
                                 <FormControl type="number" value={this.state.x_min} onChange={(e) => {
@@ -208,7 +224,7 @@ class Temperature extends React.Component {
                         </FormGroup>
                         <FormGroup controlId="x_max">
                             <Col componentClass={ControlLabel} sm={4}>
-                                X max (years)
+                                X max (year)
                             </Col>
                             <Col sm={6}>
                                 <FormControl type="number" value={this.state.x_max} onChange={(e) => {
@@ -229,6 +245,22 @@ class Temperature extends React.Component {
                                         this.handleSubmit()
                                     }}
                                 >Update chart</Button>
+                            </Col>
+
+
+                        </FormGroup>
+
+                        <FormGroup controlId="Reset">
+
+                            <Col componentClass={ControlLabel} sm={4}>
+                                Submit
+                            </Col>
+                            <Col sm={6}>
+                                <Button
+                                    onClick={() => {
+                                        this.handleReset()
+                                    }}
+                                >Reset chart</Button>
                             </Col>
 
 
@@ -255,7 +287,7 @@ function mapStateToProps(state) {
 
 // matches the dispatch/actions to the prop object
 function matchDispatchToProps(dispatch) {
-    return bindActionCreators({getTemperature: getTemperature, getTemperature_Param : getTemperature_Param}, dispatch)
+    return bindActionCreators({getTemperature: getTemperature, getTemperature_Param: getTemperature_Param}, dispatch)
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(Temperature);

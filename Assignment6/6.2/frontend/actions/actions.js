@@ -84,6 +84,50 @@ export const getCo2_Param = (obj) => {
 
     var dataToSend = {}
 
+    for(var key in obj){
+
+        console.log(key)
+
+        if(obj.hasOwnProperty(key)){
+
+                console.log(typeof  obj[key])
+
+                if(obj[key] != undefined){
+                    if(typeof obj[key] == "string"){
+                        if(obj[key].length>0){
+                            dataToSend[key] = obj[key]
+                        }
+                    }
+                    if(typeof obj[key] == "number"){
+                        dataToSend[key] = obj[key]
+                    }
+                }
+
+
+        }
+    }
+
+    console.log(dataToSend);
+
+
+    return (dispatch) => {
+        return superagent.post("http://localhost:5000/getCo2").set('Content-Type', 'application/json').send(JSON.stringify(dataToSend)).end((error, response) => {
+            if (!error && response) {
+                //localStorage.setItem('response', JSON.stringify(response.body))
+
+                var inData = JSON.parse(response.text);
+
+                dispatch(co2Updated(inData))
+
+            } else {
+                console.log('There was an error fetching from GitHub', error);
+            }
+        });
+    }
+
+
+
+
 };
 
 export const getTemperature = (month) => {

@@ -53,13 +53,17 @@ def getCo2():
 
     if (request.method == 'POST'):
 
-        for key in request.form:
+        result = request.get_json()
+
+        print(result)
+
+        for key in result:
             try:
                 """"
                 if the dict[key] excists it is replaced by the incoming max min
                 """
 
-                graph_dict[key] = int(request.form[key])
+                graph_dict[key] = int(result[key])
             except KeyError:
                 print('not in dict')
 
