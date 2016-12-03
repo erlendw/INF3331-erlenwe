@@ -4,7 +4,8 @@
   "description": "New chat front end, scalable first",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --hot --history-api-fallback"
+    "start": "webpack-dev-server --hot --history-api-fallback",
+    "build": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",

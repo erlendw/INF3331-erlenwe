@@ -133,8 +133,6 @@ export const getCo2_Param_Contry = (obj) => {
 
     for(var key in obj){
 
-        console.log(key)
-
         if(obj.hasOwnProperty(key)){
 
                 console.log(typeof  obj[key])
@@ -153,8 +151,6 @@ export const getCo2_Param_Contry = (obj) => {
 
         }
     }
-
-    console.log(dataToSend);
 
 
     return (dispatch) => {

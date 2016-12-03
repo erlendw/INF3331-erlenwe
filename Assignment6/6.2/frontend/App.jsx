@@ -27,9 +27,9 @@ class App extends React.Component {
     render() {
         return (
             <div>
-            <div className={header.header}></div>
             <Router history={browserHistory}>
                 <Route>
+                    <Route path="/" component={Temperature_62}/>
                     <Route path="/temp_62" component={Temperature_62}/>
                     <Route path="/co2_62"  component={Co2_62}/>
                     <Route path="/temp_63" component={Temperature_63}/>

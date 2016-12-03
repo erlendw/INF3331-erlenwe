@@ -1,8 +1,9 @@
 import csv
 import json
 import sys
+import os
 
-from flask import Flask
+from flask import Flask,make_response, send_from_directory, render_template
 from flask import request
 from flask_cors import CORS
 
@@ -12,6 +13,30 @@ CORS(app)
 """
 Should inputs of y_min be lower than the smallest number?
 """
+
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(path):
+    return render_template('index.html')
+
+
+
+@app.route('/js/<path:filename>')
+def serve_static(filename):
+
+    print(filename)
+
+    root_dir = os.path.dirname(os.getcwd())
+
+    print(root_dir)
+
+    path = os.path.join(root_dir,"6.2",'templates')
+
+    print(path)
+
+    return send_from_directory(path, filename)
+
 
 
 @app.route('/getCo2', methods=['POST', 'GET'])

@@ -157,4 +157,90 @@ def isBlank (myString):
     return True
 
 
-plot_co2_by_contry()
+
+"""
+ assume that temperature is roughly a linear function of CO2 emission,
+estimating the coefficients of the linear function from recent data points (using
+the past 2 is fine, as is using the past 10 or so if you want to be more thorough).
+Further, assume that the rate of increase of CO2 emissions is going to be the
+same as it is today (i.e. if there were X tons more CO2 emissions in 2016 than
+in 2015, there will be X tons more CO2 emissions in 2017 than in 2016). Using
+this, you will be able to get an estimate of the CO2 emissions and temperature
+in later years.
+"""
+
+#assume that temperature is roughly a linear function of CO2 emission
+#f(x)=ax+b
+
+def predictingTheFuture(month = 1):
+
+    y = [] # temp
+    x = [] # co2
+
+    y_years = []
+    x_years = []
+
+
+    with open('temperature.csv', 'r') as temp:
+        readerofthecsv = csv.reader(temp, delimiter=',')
+        readerofthecsv = list(readerofthecsv)
+        readerofthecsv.pop(0)
+
+    for i in range(len(readerofthecsv)):
+        y_years.append(int(readerofthecsv[i][0]))
+        y.append(readerofthecsv[i][month])
+
+
+    with open('co2.csv', 'r') as co2:
+        readerofthecsv = csv.reader(co2, delimiter=',')
+
+        readerofthecsv = list(readerofthecsv)
+
+        readerofthecsv.pop(0)
+
+        for i in range(len(readerofthecsv)):
+            x_years.append(int(readerofthecsv[i][0]))
+            x.append(readerofthecsv[i][1])
+
+
+
+
+    startyear_temp = min(y_years)
+    startyear_co2 = min(x_years)
+
+    endyear_temp = max(y_years)
+    endyear_co2 = max(x_years)
+
+
+
+
+    if(startyear_temp>startyear_co2):
+        x = x[x_years.index(startyear_temp):]
+
+    elif((startyear_temp<startyear_co2)):
+
+        y = y[y_years.index(startyear_co2):]
+
+
+
+    if (endyear_temp > endyear_co2):
+        x = x[x_years.index(endyear_temp):]
+
+    elif (endyear_temp < endyear_co2):
+        y = y[:y_years.index(endyear_co2)]
+
+    print(len(x))
+    print(len(y))
+
+
+
+    plt.scatter(x, y)
+
+    plt.show()
+
+#ax+b
+
+
+
+predictingTheFuture()
+
