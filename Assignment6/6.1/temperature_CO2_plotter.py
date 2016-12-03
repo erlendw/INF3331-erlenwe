@@ -1,71 +1,96 @@
 import csv
 
+import matplotlib
 import matplotlib.pyplot as plt
 
-import matplotlib
 matplotlib.style.use('ggplot')
-
-'''
-Todo :: add time range, x and y min/max
-'''
 
 
 def plot_temperature(month, x_min=None, x_max=None, y_min=None, y_max=None):
+    '''
+    This method is responsible for returning a plot of temperature per year based on month, x,y min and max are optional.
+    if a range is supplied that does not makes sanse given the data, the nearest available max / min will be set.
+    '''
+
+    # x and y are set as empty lists
     x = []
     y = []
+
+    # These are to set the month as a label on the plot
     months = ["January", "February", "March", "April", "May",
               "June", "July", "August", "September", "October", "November", "December"]
-    print(month)
 
+    # temperature.csv is loaded from the file and read line by line
     with open('temperature.csv', 'r') as temp:
         readerofthecsv = csv.reader(temp, delimiter=',')
         readerofthecsv = list(readerofthecsv)
+        # line 0 contains information about the rows, this is removed from the list before the itteration begins
         readerofthecsv.pop(0)
 
         for i in range(len(readerofthecsv)):
+            # extracting the year
             x.append(readerofthecsv[i][0])
+            # extracting the data for a given month
             y.append(readerofthecsv[i][month])
 
+    # plot is created
     plt.plot(x, y, label=months[month - 1])
+    # legend is added
     plt.legend()
 
+    '''
+    This part of the program does some extra logic to find min max so that it is not hardcoded as a methos parameter
+    this means that the list can be expanded or reduced without having to change anything in the code
+    '''
     if (x_min == None):
         x_min = (min([n for n in x]))
-        print(x_min)
 
     if (x_max == None):
         x_max = (max([n for n in x]))
-        print(x_max)
 
     if (y_max == None):
         y_max = (max([n for n in y]))
-        print(y_max)
         y_max = round(float(y_max)) + 1
 
     if (y_min == None):
         y_min = (max([n for n in y if float(n) < 0]))
         y_min = round(float(y_min)) + - 1
-        print(y_min)
 
+    # limits y
     plt.ylim((y_min, y_max))
+    # limits x
     plt.xlim((int(x_min), int(x_max)))
+    # shows the plot
     plt.show()
 
 
 def plot_co2(x_min=None, x_max=None, y_min=None, y_max=None):
+    '''
+    This method is responsible for plotting co2 per year, x and y min/max are optional
+    '''
+
+    # x and y are set as empty lists
     x = []
     y = []
 
+    # co2.csv is loaded from the file and read line by line
     with open('co2.csv', 'r') as co2:
         readerofthecsv = csv.reader(co2, delimiter=',')
 
         readerofthecsv = list(readerofthecsv)
-
+        # line 0 contains information about the rows, this is removed from the list before the itteration begins
         readerofthecsv.pop(0)
-
+        # itterates
         for i in range(len(readerofthecsv)):
+            # current year is extracted
             x.append(readerofthecsv[i][0])
+            # co2 emission is extracted
             y.append(readerofthecsv[i][1])
+
+    '''
+    This part of the program does some extra logic to find min max so that it is not hardcoded as a method parameters
+    this means that the list can be expanded or reduced without having to change anything in the code
+    '''
 
     if (x_min == None):
         x_min = (min([n for n in x]))
@@ -84,37 +109,45 @@ def plot_co2(x_min=None, x_max=None, y_min=None, y_max=None):
         y_min = (min([int(n) for n in y]))
         print(y_min)
 
+    # plot is created
     plt.plot(x, y)
-
+    # x and y are limited
     plt.ylim((y_min, y_max))
     plt.xlim((int(x_min), int(x_max)))
-
+    # plot is shown
     plt.show()
 
 
-"""
-Given a year_index: say 1960 we want to wxtract all valid datasets x:contry and y:co2 for that year_index
-"""
+def plot_co2_by_contry(year="2012", y_min="0", y_max="100"):
+    '''
+    This method is responsible for plotting co2 emission per capita in a given contry in a supplied year, x and y min/max are hardcoded as
+    parameters.
+    '''
 
-def plot_co2_by_contry(year="2012", y_min="0",y_max ="100"):
 
-    contry = []#contry
-    allCo2perContry = []
-    availableYears = []
+    contry = []  # holds the name of a contry
 
-    x = []#contry
-    y = []#co2 / year_index
+    allCo2perContry = [] # holds data about the datasets of a given contry
+    availableYears = [] # these are the available years
+
+    x = []  # contry
+    y = []  # co2 / year_index
+
+    #this is needed because pyplot does not accept a string as a datapoint for y
     y_indexes = []
+    #variable for keeping track of the current y index
     yindex = 0
+
+    #reads CO2_by_country.csv
     with open('CO2_by_country.csv', 'r') as co2:
         readerofthecsv = csv.reader(co2, delimiter=',')
         readerofthecsv = list(readerofthecsv)
 
         for i in range(len(readerofthecsv)):
-            dataPerYear = readerofthecsv[i][4:len(readerofthecsv)] # this is all the available data for a contry
-            #based on the year_index we want to add one data point from the list above
+            dataPerYear = readerofthecsv[i][4:len(readerofthecsv)]  # this is all the available data for a contry
+            # based on the year_index we want to add one data point from the list above
 
-            if(i == 0 ):
+            if (i == 0):
                 availableYears = dataPerYear
                 yearIndex = availableYears.index(year)
 
@@ -124,38 +157,43 @@ def plot_co2_by_contry(year="2012", y_min="0",y_max ="100"):
 
         # for every contry we want to get the data for a given year_index if all the fields are valid
         for j in range(len(contry)):
-            if (not isBlank(availableYears[yearIndex]) and not isBlank(contry[j]) and not isBlank(allCo2perContry[j][yearIndex])):
-                # print(x[i],contry[j], y[j][i])
-                lessThanMax = (float(allCo2perContry[j][yearIndex] ) < float(y_max))
+            #chacks that all the data that will be added to the set is valid
+            if (not isBlank(availableYears[yearIndex]) and not isBlank(contry[j]) and not isBlank(
+                    allCo2perContry[j][yearIndex])):
+                #checks that the point is within supplied min max
+                lessThanMax = (float(allCo2perContry[j][yearIndex]) < float(y_max))
                 moreThanMin = (float(allCo2perContry[j][yearIndex]) > float(y_min))
-                if(lessThanMax and moreThanMin):
+                if (lessThanMax and moreThanMin):
+                    #appends and inrements the data that the plot uses
                     x.append(contry[j])
                     y.append(float(allCo2perContry[j][yearIndex]))
                     y_indexes.append(yindex)
-                    yindex+=1
+                    yindex += 1
 
-
-    print(y)
-
+    #creates the tics that are added to the y indexes
     plt.xticks(y_indexes, x, rotation='vertical')
-    plt.bar(y_indexes, y, width=1 , align='center')
+    #creates the barchart
+    plt.bar(y_indexes, y, width=1, align='center')
 
+    #not to great full screen setup
     mng = plt.get_current_fig_manager()
     mng.resize(*mng.window.maxsize())
 
+    #plot is shown
     plt.show()
 
 
+def isBlank(myString):
 
+    '''
+    Helper function to check if a string is empty or blank
+    '''
 
-
-def isBlank (myString):
     if myString and myString.strip():
-        #myString is not None AND myString is not empty or blank
+        # myString is not None AND myString is not empty or blank
         return False
-    #myString is None OR myString is empty or blank
+    # myString is None OR myString is empty or blank
     return True
-
 
 
 """
@@ -169,17 +207,16 @@ this, you will be able to get an estimate of the CO2 emissions and temperature
 in later years.
 """
 
-#assume that temperature is roughly a linear function of CO2 emission
-#f(x)=ax+b
 
-def predictingTheFuture(month = 1):
+# assume that temperature is roughly a linear function of CO2 emission
+# f(x)=ax+b
 
-    y = [] # temp
-    x = [] # co2
+def predictingTheFuture(month=1):
+    y = []  # temp
+    x = []  # co2
 
     y_years = []
     x_years = []
-
 
     with open('temperature.csv', 'r') as temp:
         readerofthecsv = csv.reader(temp, delimiter=',')
@@ -189,7 +226,6 @@ def predictingTheFuture(month = 1):
     for i in range(len(readerofthecsv)):
         y_years.append(int(readerofthecsv[i][0]))
         y.append(readerofthecsv[i][month])
-
 
     with open('co2.csv', 'r') as co2:
         readerofthecsv = csv.reader(co2, delimiter=',')
@@ -202,26 +238,18 @@ def predictingTheFuture(month = 1):
             x_years.append(int(readerofthecsv[i][0]))
             x.append(readerofthecsv[i][1])
 
-
-
-
     startyear_temp = min(y_years)
     startyear_co2 = min(x_years)
 
     endyear_temp = max(y_years)
     endyear_co2 = max(x_years)
 
-
-
-
-    if(startyear_temp>startyear_co2):
+    if (startyear_temp > startyear_co2):
         x = x[x_years.index(startyear_temp):]
 
-    elif((startyear_temp<startyear_co2)):
+    elif ((startyear_temp < startyear_co2)):
 
         y = y[y_years.index(startyear_co2):]
-
-
 
     if (endyear_temp > endyear_co2):
         x = x[x_years.index(endyear_temp):]
@@ -232,15 +260,8 @@ def predictingTheFuture(month = 1):
     print(len(x))
     print(len(y))
 
-
-
     plt.scatter(x, y)
 
     plt.show()
 
-#ax+b
-
-
-
-predictingTheFuture()
-
+# ax+b

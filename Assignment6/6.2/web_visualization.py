@@ -7,43 +7,48 @@ from flask import Flask,make_response, send_from_directory, render_template
 from flask import request
 from flask_cors import CORS
 
-app = Flask(__name__)
-CORS(app)
 
-"""
-Should inputs of y_min be lower than the smallest number?
-"""
+app = Flask(__name__)
+'''
+creates the flask app
+'''
+CORS(app)# adds cross site support to the flask app
 
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def index(path):
-    return render_template('index.html')
+
+    '''
+    This is a "catchAll" method that ensures that flask is only loaded when valid api routes are loaded. This is to
+    avoid conflict in the react router in the user interface.
+    '''
+
+    return render_template('index.html') #fetches the index file from "static"
+
+
+@app.route('/docs/temperature_CO2_plotter')
+def returnDocs():
+    return render_template('temperature_CO2_plotter.m.html')
 
 
 
 @app.route('/js/<path:filename>')
 def serve_static(filename):
-
-    print(filename)
-
-    root_dir = os.path.dirname(os.getcwd())
-
-    print(root_dir)
-
-    path = os.path.join(root_dir,"6.2",'templates')
-
-    print(path)
-
-    return send_from_directory(path, filename)
+    '''
+    this method is responsible for returning all static files. The front end is transpiled and served as one large
+    javascript file. But in theory any js, css etc could be placed in the static folder
+    '''
+    return send_from_directory(filename)
 
 
 
 @app.route('/getCo2', methods=['POST', 'GET'])
 def getCo2():
-    """
-    empty x and y axis
-    """
+    '''
+    This method extracts the co2 per year and returns it as to lists x and y to be rendered server side, parameters can
+        be changed by posting data, otherwise the entire dataset is returned. Accepts post and get
+    '''
     x = []
     y = []
 
@@ -63,7 +68,8 @@ def getCo2():
         y.append(int(line[1]))
 
     """"
-    the x and y max min points are found
+    the x and y max min points are found, i do this so that the underlying data can be changed without having to change
+    the code
     """
     y_min = (min(y))
     y_max = (max(y))
@@ -76,18 +82,18 @@ def getCo2():
     """
     graph_dict = {'x_min': x_min, 'x_max': x_max, 'y_min': y_min, 'y_max': y_max}
 
+    '''
+    If the method is a post, we will check what has been supplied
+    '''
     if (request.method == 'POST'):
-
+        #pulls the json from the post from the front end
         result = request.get_json()
-
-        print(result)
-
+        #itterates over the supplied data and checks if any data in the graph dict should be overwritten
         for key in result:
             try:
                 """"
                 if the dict[key] excists it is replaced by the incoming max min
                 """
-
                 graph_dict[key] = int(result[key])
             except KeyError:
                 print('not in dict')
@@ -200,6 +206,11 @@ def getTemp(month=1):
 
 
 def isBlank(myString):
+
+    '''
+    Helper function to check if a string is empty or blank
+    '''
+
     if myString and myString.strip():
         # myString is not None AND myString is not empty or blank
         return False
@@ -211,7 +222,7 @@ def isBlank(myString):
 @app.route('/getCo2ByContry/<int:year>')
 def getCo2ByContry(year=1960):
     MAX = sys.maxsize
-    MIN = (-MAX + 1)
+    MIN = (-MAX)
 
     print(MIN, MAX)
 
