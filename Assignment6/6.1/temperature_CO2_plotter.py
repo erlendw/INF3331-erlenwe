@@ -214,21 +214,32 @@ in later years.
 
 def predictingTheFuture(month=1, years = 0):
 
-    y = []  # temp
-    x = []  # co2
+    """
+    This method predicts the grim frim future. It is based on a making a best fit plot on the scattered data of co2 x and
+    tmperature y, From that we are able to calculate our ax+b and create a linear function where x is the co2 per year
+    after 2012 the line is made from the estimated data
+    """
 
+    #sets up the empty arrays
+    y = []
+    x = []
+
+    #contains the years of each of the datasets
     y_years = []
     x_years = []
 
+    #opens the csv file
     with open('temperature.csv', 'r') as temp:
         readerofthecsv = csv.reader(temp, delimiter=',')
         readerofthecsv = list(readerofthecsv)
         readerofthecsv.pop(0)
 
+    #itterates the csv file
     for i in range(len(readerofthecsv)):
         y_years.append(int(readerofthecsv[i][0]))
         y.append(readerofthecsv[i][month])
 
+    #opens the csv file
     with open('co2.csv', 'r') as co2:
         readerofthecsv = csv.reader(co2, delimiter=',')
 
@@ -236,16 +247,19 @@ def predictingTheFuture(month=1, years = 0):
 
         readerofthecsv.pop(0)
 
+        #itterates the csv file
         for i in range(len(readerofthecsv)):
             x_years.append(float(readerofthecsv[i][0]))
             x.append(float(readerofthecsv[i][1]))
 
+    #finding min and max of the years
     startyear_temp = min(y_years)
     startyear_co2 = min(x_years)
 
     endyear_temp = max(y_years)
     endyear_co2 = max(x_years)
 
+    #cheks the datasets and removes the data that does not have a corresponing entry in the other dataset
     if (startyear_temp > startyear_co2):
         x = x[x_years.index(startyear_temp):]
 
@@ -260,13 +274,11 @@ def predictingTheFuture(month=1, years = 0):
         y = y[:y_years.index(endyear_co2)]
 
 
-
-    print(len(x))
-    print(len(y))
-
+    #converts to numpy array for polyfit
     x_np = np.asarray(x,dtype=float)
     y_np = np.asarray(y,dtype=float)
 
+    #calculates the slope and intercept (ax+b) where a = slope and b = intercept
     slope , intercept = np.polyfit(x_np,y_np,1)
 
     '''
@@ -277,27 +289,27 @@ def predictingTheFuture(month=1, years = 0):
     in later years.
     '''
 
+
+
+
+    #creates n new data points as specified by the number of years submitted by the end user
     increase = x[len(x)-1]/x[len(x)-2]
     for i in range(years):
-
         x.append((x[len(x)-1] * increase))
         y_years.append(y_years[len(y_years)-1] + 1)
         increase = x[len(x) - 1] / x[len(x) - 2]
 
-    print(x)
-
+    # creates a new line based on the co2 data x
     x_np = np.asarray(x,dtype=float)
-
     linearfunc = slope * x_np + intercept
-    print(y_years)
 
-    plt.plot(y_years, linearfunc, '-')
+
+    #limits the plots for real and predicted data, plots them in different colors
+    plt.plot(y_years[:len(y_years) - years], linearfunc[:len(y_years) - years] , 'g')
+    plt.plot(y_years[len(y_years) - years:], linearfunc[len(y_years) - years:], 'r')
 
     plt.show()
 
 
 
-# ax+b
-
-
-predictingTheFuture(month=1,years=1000)
+predictingTheFuture(month=1,years=10)
