@@ -2,6 +2,7 @@ import csv
 import json
 import sys
 import os
+import numpy as np
 
 from flask import Flask,make_response, send_from_directory, render_template
 from flask import request
@@ -307,6 +308,90 @@ def getCo2ByContry(year=1960):
                     y.append(float(allCo2perContry[j][yearIndex]))
 
     return json.dumps({'contry': x, 'arbitraryCo2Units': y, 'years': availableYears})
+
+@app.route("/predictingTheFuture", methods=['GET','POST'])
+@app.route('/predictingTheFuture/<int:year>')
+def predictingTheFuture(month=1, years=100):
+
+    y = []  # temp
+    x = []  # co2
+
+    y_years = []
+    x_years = []
+
+    with open('temperature.csv', 'r') as temp:
+        readerofthecsv = csv.reader(temp, delimiter=',')
+        readerofthecsv = list(readerofthecsv)
+        readerofthecsv.pop(0)
+
+    for i in range(len(readerofthecsv)):
+        y_years.append(int(readerofthecsv[i][0]))
+        y.append(readerofthecsv[i][month])
+
+    with open('co2.csv', 'r') as co2:
+        readerofthecsv = csv.reader(co2, delimiter=',')
+
+        readerofthecsv = list(readerofthecsv)
+
+        readerofthecsv.pop(0)
+
+        for i in range(len(readerofthecsv)):
+            x_years.append(float(readerofthecsv[i][0]))
+            x.append(round(float(readerofthecsv[i][1]),2))
+
+    print(x)
+
+    startyear_temp = min(y_years)
+    startyear_co2 = min(x_years)
+
+    endyear_temp = max(y_years)
+    endyear_co2 = max(x_years)
+
+    if (startyear_temp > startyear_co2):
+        x = x[x_years.index(startyear_temp):]
+
+    elif ((startyear_temp < startyear_co2)):
+
+        y = y[y_years.index(startyear_co2):]
+
+    if (endyear_temp > endyear_co2):
+        x = x[x_years.index(endyear_temp):]
+
+    elif (endyear_temp < endyear_co2):
+        y = y[:y_years.index(endyear_co2)]
+
+    print(len(x))
+    print(len(y))
+
+    x_np = np.asarray(x, dtype=float)
+    y_np = np.asarray(y, dtype=float)
+
+    slope, intercept = np.polyfit(x_np, y_np, 1)
+
+    '''
+    Further, assume that the rate of increase of CO2 emissions is going to be the
+    same as it is today (i.e. if there were X tons more CO2 emissions in 2016 than
+    in 2015, there will be X tons more CO2 emissions in 2017 than in 2016). Using
+    this, you will be able to get an estimate of the CO2 emissions and temperature
+    in later years.
+    '''
+
+    increase = x[len(x) - 1] / x[len(x) - 2]
+    finalrealyear = y_years[len(y_years)-1]
+    for i in range(years):
+        x.append((x[len(x) - 1] * increase))
+        y_years.append(y_years[len(y_years) - 1] + 1)
+        increase = x[len(x) - 1] / x[len(x) - 2]
+
+    print(x)
+
+    x_np = np.asarray(x, dtype=float)
+
+    linearfunc = slope * x_np + intercept
+    print(y_years)
+
+    return json.dumps({'years': y_years,'arbitraryCo2Units' : linearfunc.tolist() , 'finalrealyear' : finalrealyear})
+
 
 
 @app.errorhandler(500)

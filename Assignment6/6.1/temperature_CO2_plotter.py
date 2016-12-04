@@ -213,6 +213,7 @@ in later years.
 # f(x)=ax+b
 
 def predictingTheFuture(month=1, years = 0):
+
     y = []  # temp
     x = []  # co2
 
@@ -268,9 +269,6 @@ def predictingTheFuture(month=1, years = 0):
 
     slope , intercept = np.polyfit(x_np,y_np,1)
 
-
-    #temperature as a function of co2
-
     '''
     Further, assume that the rate of increase of CO2 emissions is going to be the
     same as it is today (i.e. if there were X tons more CO2 emissions in 2016 than
@@ -278,12 +276,6 @@ def predictingTheFuture(month=1, years = 0):
     this, you will be able to get an estimate of the CO2 emissions and temperature
     in later years.
     '''
-
-    #lets create a line of co2
-
-    #plt.plot(x_np , linearfunc, '-')
-
-    #plt.show()
 
     increase = x[len(x)-1]/x[len(x)-2]
     for i in range(years):
