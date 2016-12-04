@@ -4,16 +4,16 @@ import sys
 import os
 import numpy as np
 
-from flask import Flask,make_response, send_from_directory, render_template
+from flask import Flask, send_from_directory, render_template
 from flask import request
-from flask_cors import CORS
+#from flask_cors import CORS
 
 
 app = Flask(__name__)
 '''
 creates the flask app
 '''
-CORS(app)# adds cross site support to the flask app
+#CORS(app)# adds cross site support to the flask app
 
 
 @app.route('/', defaults={'path': ''})
