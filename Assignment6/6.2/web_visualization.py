@@ -310,7 +310,7 @@ def getCo2ByContry(year=1960):
     return json.dumps({'contry': x, 'arbitraryCo2Units': y, 'years': availableYears})
 
 @app.route("/predictingTheFuture", methods=['GET','POST'])
-@app.route('/predictingTheFuture/<int:year>')
+@app.route('/predictingTheFuture/<int:month>/<int:years>')
 def predictingTheFuture(month=1, years=100):
 
     y = []  # temp

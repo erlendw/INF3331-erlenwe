@@ -7,6 +7,7 @@ import header from './styles/header.css'
 import text from './styles/text.css'
 
 import Header from './containers/header';
+import Start from './containers/start';
 
 import Temperature_62 from './containers/6.2/Temperature';
 import Co2_62 from './containers/6.2/Co2';
@@ -33,7 +34,7 @@ class App extends React.Component {
                 <Header/>
             <Router history={browserHistory}>
                 <Route>
-                    <Route path="/" component={Temperature_62}/>
+                    <Route path="/" component={Start}/>
                     <Route path="/temp_62" component={Temperature_62}/>
                     <Route path="/co2_62"  component={Co2_62}/>
                     <Route path="/temp_63" component={Temperature_63}/>

@@ -233,9 +233,20 @@ export const getCo2 = () => {
     }
 };
 
-export const predictTheFuture = () => {
+export const predictTheFuture = (state) => {
+
+    var years = 100;
+    var month = 1;
+    console.log(state)
+
+    if(state != undefined){
+        years = state.years;
+        month = state.month
+    }
+
+
     return (dispatch) => {
-        return superagent.get("http://localhost:5000/predictingTheFuture").set('Content-Type', 'application/json').end((error, response) => {
+        return superagent.get("http://localhost:5000/predictingTheFuture/" + month +"/" +years).set('Content-Type', 'application/json').end((error, response) => {
             if (!error && response) {
                 //localStorage.setItem('response', JSON.stringify(response.body))
 

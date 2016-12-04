@@ -29,10 +29,7 @@ class Temperature extends React.Component {
         this.state = {
             month: 1,
             updateCanvas: true,
-            y_min: '',
-            y_max: '',
-            x_min: '',
-            x_max: ''
+            years:100
         };
     }
 
@@ -42,7 +39,8 @@ class Temperature extends React.Component {
 
         oldData = this.props.temperature;
 
-        this.props.getTemperature_Param(this.state);
+        this.props.predictTheFuture(this.state);
+
         this.setState({
             updateCanvas: true
         })
@@ -55,14 +53,11 @@ class Temperature extends React.Component {
         this.setState({
             month: 1,
             updateCanvas: true,
-            y_min: '',
-            y_max: '',
-            x_min: '',
-            x_max: ''
+            years: 100
 
         });
 
-        this.props.predictTheFuture(1)
+        this.props.predictTheFuture(this.state)
     }
 
     updateCanvas() {
@@ -86,7 +81,6 @@ class Temperature extends React.Component {
                             backgroundColor: 'rgba(207, 0, 15, 0.2)',
                             borderColor: 'rgba(207, 0, 15, 1)',
                             borderWidth: 1
-
                         }
                     ]
                 },
@@ -139,29 +133,9 @@ class Temperature extends React.Component {
     handleChange(e) {
 
         switch (e.target.id) {
-
-            case 'y_min':
-
+            case 'years':
                 this.setState({
-                    y_min: e.target.value
-                });
-                break;
-            case 'y_max':
-
-                this.setState({
-                    y_max: e.target.value
-                });
-                break;
-            case 'x_min':
-
-                this.setState({
-                    x_min: e.target.value
-                });
-                break;
-            case 'x_max':
-
-                this.setState({
-                    x_max: e.target.value
+                    years: e.target.value
                 });
                 break;
         }
@@ -201,48 +175,16 @@ class Temperature extends React.Component {
                             </Col>
                         </FormGroup>
 
-                        <FormGroup controlId="y_min">
+                        <FormGroup controlId="years">
                             <Col componentClass={ControlLabel} sm={4}>
-                                Y min (temp)
+                                Number of years to predict
                             </Col>
                             <Col sm={6}>
-                                <FormControl type="number" value={this.state.y_min} onChange={(e) => {
+                                <FormControl type="number" value={this.state.years} onChange={(e) => {
                                     this.handleChange(e)
                                 }}/>
                             </Col>
                         </FormGroup>
-                        <FormGroup controlId="y_max">
-                            <Col componentClass={ControlLabel} sm={4}>
-                                Y max (temp)
-                            </Col>
-                            <Col sm={6}>
-                                <FormControl type="number" value={this.state.y_max} onChange={(e) => {
-                                    this.handleChange(e)
-                                }}/>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup controlId="x_min">
-                            <Col componentClass={ControlLabel} sm={4}>
-                                X min (year)
-                            </Col>
-                            <Col sm={6}>
-                                <FormControl type="number" value={this.state.x_min} onChange={(e) => {
-                                    this.handleChange(e)
-                                }}/>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup controlId="x_max">
-                            <Col componentClass={ControlLabel} sm={4}>
-                                X max (year)
-                            </Col>
-                            <Col sm={6}>
-                                <FormControl type="number" value={this.state.x_max} onChange={(e) => {
-                                    this.handleChange(e)
-                                }}/>
-                            </Col>
-                        </FormGroup>
-
-
                         <FormGroup controlId="buttons">
 
                             <Col componentClass={ControlLabel} sm={4}>
