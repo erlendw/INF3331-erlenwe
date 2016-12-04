@@ -69,14 +69,14 @@ class Temperature extends React.Component {
                 type: 'line',
                 data: {
                     datasets: [{
-                        label: 'Based on actual co2 data',
+                        label: 'Temperature per year based on actual co2 data',
                         data: this.props.temperature.meanTemperature,
                         backgroundColor: 'rgba(68, 108, 179, 0.2)',
                         borderColor: 'rgba(68, 108, 179,1)',
                         borderWidth: 1
                     },
                         {
-                            label: 'Based on estimated co2 data',
+                            label: 'Temperature per year based on estimated co2 data',
                             data: this.props.temperature.predictedMeanTemperatures,
                             backgroundColor: 'rgba(207, 0, 15, 0.2)',
                             borderColor: 'rgba(207, 0, 15, 1)',

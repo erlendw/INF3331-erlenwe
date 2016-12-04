@@ -75,7 +75,7 @@ class Temperature extends React.Component {
                 data: {
                     labels: this.props.temperature.years,
                     datasets: [{
-                        label: 'Mean temperature in °C per year_index for ' + this.props.temperature.month,
+                        label: 'Mean temperature in °C per year for ' + this.props.temperature.month,
                         ylabel: 'test',
                         data: this.props.temperature.meanTemperature,
                         backgroundColor: 'rgba(68, 108, 179, 0.2)',

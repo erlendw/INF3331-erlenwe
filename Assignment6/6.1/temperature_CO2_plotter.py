@@ -7,7 +7,7 @@ import numpy as np
 matplotlib.style.use('ggplot')
 
 
-def plot_temperature(month, x_min=None, x_max=None, y_min=None, y_max=None):
+def plot_temperature(month=1, x_min=None, x_max=None, y_min=None, y_max=None):
     '''
     This method is responsible for returning a plot of temperature per year based on month, x,y min and max are optional.
     if a range is supplied that does not makes sanse given the data, the nearest available max / min will be set.
@@ -36,6 +36,8 @@ def plot_temperature(month, x_min=None, x_max=None, y_min=None, y_max=None):
 
     # plot is created
     plt.plot(x, y, label=months[month - 1])
+    plt.xlabel("years")
+    plt.ylabel("Deg C")
     # legend is added
     plt.legend()
 
@@ -114,8 +116,24 @@ def plot_co2(x_min=None, x_max=None, y_min=None, y_max=None):
     # x and y are limited
     plt.ylim((y_min, y_max))
     plt.xlim((int(x_min), int(x_max)))
+
+    plt.xlabel("years")
+    plt.ylabel("Co2")
     # plot is shown
     plt.show()
+
+def isBlank(myString):
+
+    '''
+    Helper function to check if a string is empty or blank
+    '''
+
+    if myString and myString.strip():
+        # myString is not None AND myString is not empty or blank
+        return False
+    # myString is None OR myString is empty or blank
+    return True
+
 
 
 def plot_co2_by_contry(year="2012", y_min="0", y_max="100"):
@@ -175,6 +193,9 @@ def plot_co2_by_contry(year="2012", y_min="0", y_max="100"):
     #creates the barchart
     plt.bar(y_indexes, y, width=1, align='center')
 
+    plt.xlabel("contry")
+    plt.ylabel("Co2/capita")
+
     #not to great full screen setup
     mng = plt.get_current_fig_manager()
     mng.resize(*mng.window.maxsize())
@@ -183,17 +204,6 @@ def plot_co2_by_contry(year="2012", y_min="0", y_max="100"):
     plt.show()
 
 
-def isBlank(myString):
-
-    '''
-    Helper function to check if a string is empty or blank
-    '''
-
-    if myString and myString.strip():
-        # myString is not None AND myString is not empty or blank
-        return False
-    # myString is None OR myString is empty or blank
-    return True
 
 
 """
@@ -211,7 +221,7 @@ in later years.
 # assume that temperature is roughly a linear function of CO2 emission
 # f(x)=ax+b
 
-def predictingTheFuture(month=1, years = 0):
+def predictingTheFuture(month=1, years = 100):
 
     """
     This method predicts the grim frim future. It is based on a making a best fit plot on the scattered data of co2 x and
@@ -303,6 +313,8 @@ def predictingTheFuture(month=1, years = 0):
     #limits the plots for real and predicted data, plots them in different colors
     plt.plot(y_years[:len(y_years) - years], linearfunc[:len(y_years) - years] , 'g')
     plt.plot(y_years[len(y_years) - years:], linearfunc[len(y_years) - years:], 'r')
+    plt.xlabel("year")
+    plt.ylabel("Co2")
 
     plt.show()
 

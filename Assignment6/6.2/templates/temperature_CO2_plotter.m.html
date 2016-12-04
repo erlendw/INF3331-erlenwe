@@ -1075,7 +1075,7 @@ table {
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">plot_temperature</span><span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="n">x_min</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">x_max</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y_min</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y_max</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">plot_temperature</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">x_min</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">x_max</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y_min</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y_max</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    This method is responsible for returning a plot of temperature per year based on month, x,y min and max are optional.</span>
 <span class="sd">    if a range is supplied that does not makes sanse given the data, the nearest available max / min will be set.</span>
@@ -1104,6 +1104,8 @@ table {
 
     <span class="c1"># plot is created</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">months</span><span class="p">[</span><span class="n">month</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;years&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Deg C&quot;</span><span class="p">)</span>
     <span class="c1"># legend is added</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
@@ -1182,8 +1184,24 @@ table {
     <span class="c1"># x and y are limited</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">((</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">x_min</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">x_max</span><span class="p">)))</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;years&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Co2&quot;</span><span class="p">)</span>
     <span class="c1"># plot is shown</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">isBlank</span><span class="p">(</span><span class="n">myString</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Helper function to check if a string is empty or blank</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">myString</span> <span class="ow">and</span> <span class="n">myString</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+        <span class="c1"># myString is not None AND myString is not empty or blank</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="c1"># myString is None OR myString is empty or blank</span>
+    <span class="k">return</span> <span class="bp">True</span>
+
 
 
 <span class="k">def</span> <span class="nf">plot_co2_by_contry</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s2">&quot;2012&quot;</span><span class="p">,</span> <span class="n">y_min</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="n">y_max</span><span class="o">=</span><span class="s2">&quot;100&quot;</span><span class="p">):</span>
@@ -1243,6 +1261,9 @@ table {
     <span class="c1">#creates the barchart</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">y_indexes</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
 
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;contry&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Co2/capita&quot;</span><span class="p">)</span>
+
     <span class="c1">#not to great full screen setup</span>
     <span class="n">mng</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_current_fig_manager</span><span class="p">()</span>
     <span class="n">mng</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="o">*</span><span class="n">mng</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">maxsize</span><span class="p">())</span>
@@ -1251,17 +1272,6 @@ table {
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">isBlank</span><span class="p">(</span><span class="n">myString</span><span class="p">):</span>
-
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Helper function to check if a string is empty or blank</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-
-    <span class="k">if</span> <span class="n">myString</span> <span class="ow">and</span> <span class="n">myString</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-        <span class="c1"># myString is not None AND myString is not empty or blank</span>
-        <span class="k">return</span> <span class="bp">False</span>
-    <span class="c1"># myString is None OR myString is empty or blank</span>
-    <span class="k">return</span> <span class="bp">True</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -1279,7 +1289,7 @@ table {
 <span class="c1"># assume that temperature is roughly a linear function of CO2 emission</span>
 <span class="c1"># f(x)=ax+b</span>
 
-<span class="k">def</span> <span class="nf">predictingTheFuture</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">years</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">predictingTheFuture</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">years</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This method predicts the grim frim future. It is based on a making a best fit plot on the scattered data of co2 x and</span>
@@ -1371,6 +1381,8 @@ table {
     <span class="c1">#limits the plots for real and predicted data, plots them in different colors</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y_years</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">],</span> <span class="n">linearfunc</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">]</span> <span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y_years</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">:],</span> <span class="n">linearfunc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">:],</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Co2&quot;</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -1475,6 +1487,9 @@ table {
     <span class="c1"># x and y are limited</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">((</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">x_min</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">x_max</span><span class="p">)))</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;years&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Co2&quot;</span><span class="p">)</span>
     <span class="c1"># plot is shown</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -1555,6 +1570,9 @@ parameters.</p></div>
     <span class="c1">#creates the barchart</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">y_indexes</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
 
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;contry&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Co2/capita&quot;</span><span class="p">)</span>
+
     <span class="c1">#not to great full screen setup</span>
     <span class="n">mng</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_current_fig_manager</span><span class="p">()</span>
     <span class="n">mng</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="o">*</span><span class="n">mng</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">maxsize</span><span class="p">())</span>
@@ -1571,7 +1589,7 @@ parameters.</p></div>
       
   <div class="item">
     <div class="name def" id="temperature_CO2_plotter.plot_temperature">
-    <p>def <span class="ident">plot_temperature</span>(</p><p>month, x_min=None, x_max=None, y_min=None, y_max=None)</p>
+    <p>def <span class="ident">plot_temperature</span>(</p><p>month=1, x_min=None, x_max=None, y_min=None, y_max=None)</p>
     </div>
     
 
@@ -1582,7 +1600,7 @@ if a range is supplied that does not makes sanse given the data, the nearest ava
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-temperature_CO2_plotter.plot_temperature', this);">Show source &equiv;</a></p>
   <div id="source-temperature_CO2_plotter.plot_temperature" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_temperature</span><span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="n">x_min</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">x_max</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y_min</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y_max</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">plot_temperature</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">x_min</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">x_max</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y_min</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y_max</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    This method is responsible for returning a plot of temperature per year based on month, x,y min and max are optional.</span>
 <span class="sd">    if a range is supplied that does not makes sanse given the data, the nearest available max / min will be set.</span>
@@ -1611,6 +1629,8 @@ if a range is supplied that does not makes sanse given the data, the nearest ava
 
     <span class="c1"># plot is created</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">months</span><span class="p">[</span><span class="n">month</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;years&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Deg C&quot;</span><span class="p">)</span>
     <span class="c1"># legend is added</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
@@ -1648,7 +1668,7 @@ if a range is supplied that does not makes sanse given the data, the nearest ava
       
   <div class="item">
     <div class="name def" id="temperature_CO2_plotter.predictingTheFuture">
-    <p>def <span class="ident">predictingTheFuture</span>(</p><p>month=1, years=0)</p>
+    <p>def <span class="ident">predictingTheFuture</span>(</p><p>month=1, years=100)</p>
     </div>
     
 
@@ -1660,7 +1680,7 @@ after 2012 the line is made from the estimated data</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-temperature_CO2_plotter.predictingTheFuture', this);">Show source &equiv;</a></p>
   <div id="source-temperature_CO2_plotter.predictingTheFuture" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predictingTheFuture</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">years</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predictingTheFuture</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">years</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This method predicts the grim frim future. It is based on a making a best fit plot on the scattered data of co2 x and</span>
@@ -1752,6 +1772,8 @@ after 2012 the line is made from the estimated data</p></div>
     <span class="c1">#limits the plots for real and predicted data, plots them in different colors</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y_years</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">],</span> <span class="n">linearfunc</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">]</span> <span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y_years</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">:],</span> <span class="n">linearfunc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">:],</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Co2&quot;</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>

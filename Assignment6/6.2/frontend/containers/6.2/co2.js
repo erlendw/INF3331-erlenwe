@@ -21,7 +21,7 @@ class Co2 extends React.Component{
             data: {
                 labels: this.props.Co2.years,
                 datasets: [{
-                    label: 'Co2 per year_index',
+                    label: 'Co2 per year',
                     data: this.props.Co2.arbitraryCo2Units,
                     backgroundColor: 'rgba(68, 108, 179, 0.2)',
                     borderColor: 'rgba(68, 108, 179,1)',

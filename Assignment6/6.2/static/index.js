@@ -49418,7 +49418,7 @@
 	                    data: {
 	                        labels: this.props.temperature.years,
 	                        datasets: [{
-	                            label: 'Mean temperature in °C per year_index for ' + this.props.temperature.month,
+	                            label: 'Mean temperature in °C per year for ' + this.props.temperature.month,
 	                            ylabel: 'test',
 	                            data: this.props.temperature.meanTemperature,
 	                            backgroundColor: 'rgba(68, 108, 179, 0.2)',
@@ -76242,7 +76242,7 @@
 	                    data: {
 	                        labels: this.props.Co2.years,
 	                        datasets: [{
-	                            label: 'Co2 per year_index',
+	                            label: 'Co2 per year',
 	                            data: this.props.Co2.arbitraryCo2Units,
 	                            backgroundColor: 'rgba(68, 108, 179, 0.2)',
 	                            borderColor: 'rgba(68, 108, 179,1)',
@@ -76411,7 +76411,7 @@
 	                    data: {
 	                        labels: this.props.temperature.years,
 	                        datasets: [{
-	                            label: 'Mean temperature in °C per year_index for ' + this.props.temperature.month,
+	                            label: 'Mean temperature in °C per year for ' + this.props.temperature.month,
 	                            ylabel: 'test',
 	                            data: this.props.temperature.meanTemperature,
 	                            backgroundColor: 'rgba(68, 108, 179, 0.2)',
@@ -76774,7 +76774,7 @@
 	                    data: {
 	                        labels: this.props.Co2.years,
 	                        datasets: [{
-	                            label: 'Co2 per year_index',
+	                            label: 'Co2 per year',
 	                            data: this.props.Co2.arbitraryCo2Units,
 	                            backgroundColor: 'rgba(68, 108, 179, 0.2)',
 	                            borderColor: 'rgba(68, 108, 179,1)',
@@ -77119,7 +77119,7 @@
 	                    data: {
 	                        labels: this.props.Co2.contry,
 	                        datasets: [{
-	                            label: 'Co2 per year',
+	                            label: 'Co2 per capita',
 	                            data: this.props.Co2.arbitraryCo2Units,
 	                            backgroundColor: 'rgba(68, 108, 179, 0.2)',
 	                            borderColor: 'rgba(68, 108, 179,1)',
@@ -77473,13 +77473,13 @@
 	                    type: 'line',
 	                    data: {
 	                        datasets: [{
-	                            label: 'Based on actual co2 data',
+	                            label: 'Temperature per year based on actual co2 data',
 	                            data: this.props.temperature.meanTemperature,
 	                            backgroundColor: 'rgba(68, 108, 179, 0.2)',
 	                            borderColor: 'rgba(68, 108, 179,1)',
 	                            borderWidth: 1
 	                        }, {
-	                            label: 'Based on estimated co2 data',
+	                            label: 'Temperature per year based on estimated co2 data',
 	                            data: this.props.temperature.predictedMeanTemperatures,
 	                            backgroundColor: 'rgba(207, 0, 15, 0.2)',
 	                            borderColor: 'rgba(207, 0, 15, 1)',
