@@ -27,6 +27,7 @@ class App extends React.Component {
     render() {
         return (
             <div>
+                <Header/>
             <Router history={browserHistory}>
                 <Route>
                     <Route path="/" component={Temperature_62}/>

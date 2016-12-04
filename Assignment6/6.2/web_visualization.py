@@ -28,10 +28,18 @@ def index(path):
 
 
 @app.route('/docs/temperature_CO2_plotter')
-def returnDocs():
+def returnDocsTemp():
+    '''
+    Renders the docs for python module temperature_CO2_plotter
+    '''
     return render_template('temperature_CO2_plotter.m.html')
 
-
+@app.route('/docs/web_visualization')
+def returnDocsFlask():
+    '''
+    Renders the docs for python module web_visualization
+    '''
+    return render_template('web_visualization.m.html')
 
 @app.route('/js/<path:filename>')
 def serve_static(filename):
@@ -128,12 +136,12 @@ def getCo2():
 @app.route('/getTemp', methods=['POST', 'GET'])
 @app.route('/getTemp/<int:month>')
 def getTemp(month=1):
+    """
+    This method is responsible for getting the temperature per year given a specific month
+    """
     if (request.method == 'POST'):
-
+        #if the method is post, we try to extract month
         result = request.get_json()
-
-        print(result)
-
         try:
             month = int(result['month'])
         except KeyError:
@@ -141,23 +149,25 @@ def getTemp(month=1):
 
     print(month)
 
+    #sets up empty lists for x and y
     x = []
     y = []
 
+    #months are listed to return to the front end
     months = ["January", "February", "March", "April", "May",
               "June", "July", "August", "September", "October", "November", "December"]
 
+    #opens the temperature data from the temperature.csv file
     with open('temperature.csv', 'r') as temp:
         readerofthecsv = csv.reader(temp, delimiter=',')
         readerofthecsv = list(readerofthecsv)
+        #row 0 contains info of the rows, and it should not be sent back to the frontend
         readerofthecsv.pop(0)
 
+    #itterates over the lines of the rows of the csv file
     for line in readerofthecsv:
         x.append(int(line[0]))
-
         y.append(float(line[month]))
-
-    print(y)
 
     """"
     the x and y max min points are found
@@ -173,18 +183,18 @@ def getTemp(month=1):
     """
     graph_dict = {'x_min': x_min, 'x_max': x_max, 'y_min': y_min, 'y_max': y_max}
 
+    #if the method is post, we itterate over the keys in the response
     if (request.method == 'POST'):
-
         for key in result:
             try:
                 """"
                 if the dict[key] excists it is replaced by the incoming max min
                 """
-
                 graph_dict[key] = int(result[key])
             except KeyError:
                 print('not in dict')
 
+    #clear and rebuild the x and y arrays
     x.clear()
     y.clear()
 
@@ -221,19 +231,26 @@ def isBlank(myString):
 @app.route("/getCo2ByContry", methods=['POST', 'GET'])
 @app.route('/getCo2ByContry/<int:year>')
 def getCo2ByContry(year=1960):
-    MAX = sys.maxsize
-    MIN = (-MAX)
 
-    print(MIN, MAX)
+    '''
+    This method is responisble for for returning the co2 per capita in a given year. The min year is hardcoded as a paramater.
+    '''
 
+    MAX = sys.maxsize #sets an arbitrary min and max
+    MIN = (-MAX)#
+
+
+    #creates the graph dictionary
     graph_dict = {'x_min': MIN, 'x_max': MAX, 'y_min': MIN, 'y_max': MAX, 'year': year}
 
+    #checks if the method is post
     if (request.method == 'POST'):
-
+        #the result of the request
         result = request.get_json()
 
         print(result)
 
+        #itterates and overwrites the apropriate data in the graph dict
         for key in result:
             try:
                 """"
@@ -243,38 +260,42 @@ def getCo2ByContry(year=1960):
             except KeyError:
                 print('not in dict')
 
+    #y_min and max is hardcoded //need to fix
     y_max = 100
     y_min = 0
 
     contry = []  # contry
-    allCo2perContry = []
-    availableYears = []
+    allCo2perContry = [] # all co2 data / contry
+    availableYears = [] # all available years
 
     x = []  # contry
     y = []  # co2 / year_index
 
+    #reads the csv file
     with open('CO2_by_country.csv', 'r') as co2:
         readerofthecsv = csv.reader(co2, delimiter=',')
         readerofthecsv = list(readerofthecsv)
 
+        #itterates over the csv file
         for i in range(len(readerofthecsv)):
             dataPerYear = readerofthecsv[i][4:len(readerofthecsv)]  # this is all the available data for a contry
             # based on the year_index we want to add one data point from the list above
-
+            #checks if the line is 0, if so we
             if (i == 0):
                 availableYears = dataPerYear
                 yearIndex = dataPerYear.index(str(int(graph_dict['year'])))
 
             else:
+                #gets the current contry and appends it to the list
                 contry.append(readerofthecsv[i][0])
                 allCo2perContry.append(dataPerYear)
 
         # for every contry we want to get the data for a given year_index if all the fields are valid
 
 
-
+        #itterates over the data
         for j in range(len(contry)):
-
+            #checks that the datapoints are valid
             if (not isBlank(availableYears[yearIndex]) and not isBlank(contry[j]) and not isBlank(
                     allCo2perContry[j][yearIndex])):
 
@@ -290,14 +311,23 @@ def getCo2ByContry(year=1960):
 
 @app.errorhandler(500)
 def internal_error(error):
+    '''
+    Handles 500 error
+    '''
     return "500 error"
 
 
 @app.errorhandler(404)
 def not_found(error):
+    '''
+    Handles 404 //todo add custom
+    '''
     return "404 error", 404
 
 
 if __name__ == "__main__":
+    '''
+    I am main, hear me roar
+    '''
     app.debug = True
     app.run()

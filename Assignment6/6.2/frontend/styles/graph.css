@@ -22,7 +22,8 @@
     color: white;
     background: rgba(52, 73, 94, 0.9);
     width: calc(25vw);
-    height: calc(100vh);
+    height: calc(100vh - 50px);
+    margin-top: -20px;
     position: fixed;
     left: 0;
     float: left;

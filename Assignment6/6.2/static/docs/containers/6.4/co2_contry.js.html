@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" charset="utf-8">
+    <title>mr-doc</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/cayman.min.css">
+    <link rel="stylesheet" href="../../css/prism.min.css">
+    <link rel="stylesheet" href="../../css/index.min.css">
+    <link rel="stylesheet" href="../../css/docs.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap-responsive.min.css">
+  </head>
+  <body data-spy="scroll" data-target=".scrollspy">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container"><a class="brand">Mr. Doc</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right sponsored"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header id="overview" class="jumbotron subhead">
+      <div class="container">
+        <h1>mr-doc</h1>
+        <p class="lead"></p>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li><a href="../../index.html">Main</a></li>
+            <li><a href="../../actions/actions.js.html">actions/actions.js</a></li>
+            <li><a href="../../containers/6.2/co2.js.html">containers/6.2/co2.js</a></li>
+            <li><a href="../../containers/6.2/temperature.js.html">containers/6.2/temperature.js</a></li>
+            <li><a href="../../containers/6.3/co2.js.html">containers/6.3/co2.js</a></li>
+            <li><a href="../../containers/6.3/temperature.js.html">containers/6.3/temperature.js</a></li>
+            <li class="active"><a href="../../containers/6.4/co2_contry.js.html">containers/6.4/co2_contry.js</a></li>
+            <li><a href="../../containers/header.js.html">containers/header.js</a></li>
+            <li><a href="../../main.js.html">main.js</a></li>
+            <li><a href="../../reducers/co2.js.html">reducers/co2.js</a></li>
+            <li><a href="../../reducers/reducers.js.html">reducers/reducers.js</a></li>
+            <li><a href="../../reducers/temperature.js.html">reducers/temperature.js</a></li>
+            <li><a href="../../server.js.html">server.js</a></li>
+            <li><a href="../../webpack.config.js.html">webpack.config.js</a></li>
+          </ul>
+          <div class="scrollspy">
+            <ul class="nav nav-list bs-docs-sidenav affix-top">
+            </ul>
+          </div>
+        </div>
+        <div class="span9">
+          <div class="description"><p>Created by erlend on 02.12.2016.</p></div>
+          <pre><code class="language-javascript">import React from &quot;react&quot;;
+import ReactDOM from &quot;react-dom&quot;;
+import {bindActionCreators} from &quot;redux&quot;;
+import {connect} from &quot;react-redux&quot;;
+import {getCo2, getCo2_Param_Contry} from &quot;../../actions/actions&quot;;
+import {
+    Grid,
+    Row,
+    Col,
+    DropdownButton,
+    MenuItem,
+    FormGroup,
+    FormControl,
+    Form,
+    ControlLabel,
+    Button,
+    Collapse,
+    Well
+} from &quot;react-bootstrap&quot;;
+import graph from &quot;../../styles/graph.css&quot;;
+import text from &quot;../../styles/text.css&quot;;
+
+var myChart;
+var oldData;
+
+
+class Co2 extends React.Component {
+
+
+    constructor() {
+        super();
+        this.state = {
+            year_index: 0,
+            year:0,
+            y_min: '',
+            y_max: '',
+            x_min: '',
+            x_max: ''
+        };
+    }
+
+    handleSubmit() {
+
+        console.log(this.state);
+
+        oldData = this.props.Co2;
+
+        this.props.getCo2_Param_Contry(this.state);
+        this.setState({
+            updateCanvas: true
+        })
+
+    }
+
+    handleReset() {
+
+        this.setState({
+            year: 1960,
+            year_index: 0,
+            updateCanvas: true,
+            y_min: '',
+            y_max: '',
+            x_min: '',
+            x_max: ''
+
+        });
+
+        this.props.getCo2_Param_Contry({
+            year: 1960,
+            year_index: 0,
+            updateCanvas: true,
+            y_min: '',
+            y_max: '',
+            x_min: '',
+            x_max: ''
+
+        });
+
+
+    }
+
+    updateCanvas() {
+
+        let canvas = ReactDOM.findDOMNode(this.refs.myCanvas);
+        let ctx = canvas.getContext('2d');
+
+        if (myChart == undefined) {
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: this.props.Co2.contry,
+                    datasets: [{
+                        label: 'Co2 per year',
+                        data: this.props.Co2.arbitraryCo2Units,
+                        backgroundColor: 'rgba(68, 108, 179, 0.2)',
+                        borderColor: 'rgba(68, 108, 179,1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    hover: {
+                        // Overrides the global setting
+                        mode: 'nearest',
+                        responsive: true
+                    }
+                }
+            });
+        }
+
+        else {
+
+            myChart.destroy()
+            myChart = undefined;
+            this.updateCanvas()
+
+        }
+    }
+
+    componentWillMount() {
+        this.props.getCo2_Param_Contry();
+    }
+
+    componentDidUpdate() {
+
+        console.log(oldData === this.props.Co2)
+
+        if (!(oldData === this.props.Co2 )) {
+
+            this.updateCanvas();
+            oldData = this.props.Co2;
+        }
+
+    }
+
+    dropdownChanged(index) {
+
+        console.log(index)
+
+        this.setState({
+
+            year: this.props.Co2.years[index],
+            year_index : index,
+            open: false
+
+        });
+
+        console.log(this.state)
+    }
+
+    handleChange(e) {
+
+        switch (e.target.id) {
+
+            case 'y_min':
+
+                this.setState({
+                    y_min: e.target.value
+                });
+                break;
+            case 'y_max':
+
+                this.setState({
+                    y_max: e.target.value
+                });
+                break;
+            case 'x_min':
+
+                this.setState({
+                    x_min: e.target.value
+                });
+                break;
+            case 'x_max':
+
+                this.setState({
+                    x_max: e.target.value
+                });
+                break;
+        }
+    }
+
+
+    render() {
+
+        if (this.props.Co2.years == undefined) {
+            var years = []
+        }
+        else {
+            var years = this.props.Co2.years
+        }
+
+
+        var months = [&quot;January&quot;, &quot;February&quot;, &quot;March&quot;, &quot;April&quot;, &quot;May&quot;,
+            &quot;June&quot;, &quot;July&quot;, &quot;August&quot;, &quot;September&quot;, &quot;October&quot;, &quot;November&quot;, &quot;December&quot;]
+
+        return ( &lt;div&gt;
+
+                &lt;div className={graph.graph}&gt;
+                    &lt;canvas ref=&quot;myCanvas&quot;/&gt;
+                &lt;/div&gt;
+
+                &lt;div className={graph.sidebar}&gt;
+
+
+                    &lt;Form horizontal&gt;
+
+                        &lt;FormGroup controlId=&quot;month&quot;&gt;
+                            &lt;Col componentClass={ControlLabel} sm={4}&gt;
+                                Years
+                            &lt;/Col&gt;
+                            &lt;Col sm={6}&gt;
+
+                                &lt;Button onClick={ () =&gt; this.setState({open: !this.state.open})}&gt;
+                                    {years[this.state.year_index]}
+                                &lt;/Button&gt;
+
+                            &lt;/Col&gt;
+                        &lt;/FormGroup&gt;
+
+
+                        &lt;Collapse in={this.state.open}&gt;
+                            &lt;div className={text.text}&gt;
+                                &lt;Well&gt;
+                                    &lt;Row&gt;
+                                    {
+                                        years.map((year, index) =&gt; {
+
+                                            return (
+                                                &lt;Col md={3} className={text.clickable} onClick={() =&gt; {this.dropdownChanged(index)}}&gt;{year}&lt;/Col&gt;
+                                            )
+
+                                        })}
+                                    &lt;/Row&gt;
+
+                                &lt;/Well&gt;
+                            &lt;/div&gt;
+                        &lt;/Collapse&gt;
+
+                        &lt;FormGroup controlId=&quot;y_min&quot;&gt;
+                            &lt;Col componentClass={ControlLabel} sm={4}&gt;
+                                Y min (co2)
+                            &lt;/Col&gt;
+                            &lt;Col sm={6}&gt;
+                                &lt;FormControl type=&quot;number&quot; value={this.state.y_min} onChange={(e) =&gt; {
+                                    this.handleChange(e)
+                                }}/&gt;
+                            &lt;/Col&gt;
+                        &lt;/FormGroup&gt;
+                        &lt;FormGroup controlId=&quot;y_max&quot;&gt;
+                            &lt;Col componentClass={ControlLabel} sm={4}&gt;
+                                Y max (co2)
+                            &lt;/Col&gt;
+                            &lt;Col sm={6}&gt;
+                                &lt;FormControl type=&quot;number&quot; value={this.state.y_max} onChange={(e) =&gt; {
+                                    this.handleChange(e)
+                                }}/&gt;
+                            &lt;/Col&gt;
+                        &lt;/FormGroup&gt;
+
+                        &lt;FormGroup controlId=&quot;buttons&quot;&gt;
+
+                            &lt;Col componentClass={ControlLabel} sm={4}&gt;
+                                Submit
+                            &lt;/Col&gt;
+                            &lt;Col sm={6}&gt;
+                                &lt;Button
+                                    onClick={() =&gt; {
+                                        this.handleSubmit()
+                                    }}
+                                &gt;Update chart&lt;/Button&gt;
+                            &lt;/Col&gt;
+
+
+                        &lt;/FormGroup&gt;
+
+                        &lt;FormGroup controlId=&quot;Reset&quot;&gt;
+
+                            &lt;Col componentClass={ControlLabel} sm={4}&gt;
+                                Submit
+                            &lt;/Col&gt;
+                            &lt;Col sm={6}&gt;
+                                &lt;Button
+                                    onClick={() =&gt; {
+                                        this.handleReset()
+                                    }}
+                                &gt;Reset chart&lt;/Button&gt;
+                            &lt;/Col&gt;
+
+
+                        &lt;/FormGroup&gt;
+
+                    &lt;/Form&gt;
+
+
+                &lt;/div&gt;
+
+
+            &lt;/div&gt;
+        )
+    }
+}
+function mapStateToProps(state) {
+    return {
+        Co2: state.co2
+    }
+}
+// matches the dispatch/actions to the prop object
+function matchDispatchToProps(dispatch) {
+    return bindActionCreators({getCo2: getCo2, getCo2_Param_Contry: getCo2_Param_Contry}, dispatch)
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(Co2);</code></pre>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p>Documentation generated with <a href="https://github.com/mr-doc/mr-doc">Mr. Doc </a> created by <a href="https://twitter.com/FGRibreau" data-show-count="false" class="twitter-follow-button">Francois-Guillaume Ribreau </a></p>
+        <p>Mr. Doc is sponsored by <a href="http://bringr.net/?btt" title="Outil d'analyse des réseaux sociaux" class="bringr">Bringr </a> and <a href="https://redsmin.com/?btt" title="Full Redis GUI" class="redsmin">Redsmin</a></p>
+        <p>Theme borrowed from Twitter Bootstrap</p>
+      </div>
+    </footer>
+    <script src="../../js/twitter-widget.min.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap-transition.min.js"></script>
+    <script src="../../js/bootstrap-scrollspy.min.js"></script>
+    <script src="../../js/bootstrap-dropdown.min.js"></script>
+    <script src="../../js/bootstrap-collapse.min.js"></script>
+    <script src="../../js/bootstrap-affix.min.js"></script>
+    <script src="../../js/prism.min.js"></script>
+    <script src="../../js/index.min.js"></script>
+  </body>
+</html>

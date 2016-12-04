@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" charset="utf-8">
+    <title>mr-doc</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/cayman.min.css">
+    <link rel="stylesheet" href="../../css/prism.min.css">
+    <link rel="stylesheet" href="../../css/index.min.css">
+    <link rel="stylesheet" href="../../css/docs.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap-responsive.min.css">
+  </head>
+  <body data-spy="scroll" data-target=".scrollspy">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container"><a class="brand">Mr. Doc</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right sponsored"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header id="overview" class="jumbotron subhead">
+      <div class="container">
+        <h1>mr-doc</h1>
+        <p class="lead"></p>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li><a href="../../index.html">Main</a></li>
+            <li><a href="../../actions/actions.js.html">actions/actions.js</a></li>
+            <li><a href="../../containers/6.2/co2.js.html">containers/6.2/co2.js</a></li>
+            <li class="active"><a href="../../containers/6.2/temperature.js.html">containers/6.2/temperature.js</a></li>
+            <li><a href="../../containers/6.3/co2.js.html">containers/6.3/co2.js</a></li>
+            <li><a href="../../containers/6.3/temperature.js.html">containers/6.3/temperature.js</a></li>
+            <li><a href="../../containers/6.4/co2_contry.js.html">containers/6.4/co2_contry.js</a></li>
+            <li><a href="../../containers/header.js.html">containers/header.js</a></li>
+            <li><a href="../../main.js.html">main.js</a></li>
+            <li><a href="../../reducers/co2.js.html">reducers/co2.js</a></li>
+            <li><a href="../../reducers/reducers.js.html">reducers/reducers.js</a></li>
+            <li><a href="../../reducers/temperature.js.html">reducers/temperature.js</a></li>
+            <li><a href="../../server.js.html">server.js</a></li>
+            <li><a href="../../webpack.config.js.html">webpack.config.js</a></li>
+          </ul>
+          <div class="scrollspy">
+            <ul class="nav nav-list bs-docs-sidenav affix-top">
+            </ul>
+          </div>
+        </div>
+        <div class="span9">
+          <div class="description"></div>
+          <pre><code class="language-javascript">import React from 'react'
+import ReactDOM from 'react-dom';
+import {bindActionCreators} from 'redux'
+import {connect} from 'react-redux'
+import {getTemperature} from '../../actions/actions'
+import {Grid, Row, Col, DropdownButton, MenuItem} from 'react-bootstrap'
+import chatstyle from '../../styles/graph.css'
+import Chart from 'chart.js';
+
+var myChart;
+
+
+class Temperature extends React.Component {
+
+    updateCanvas() {
+        let canvas = ReactDOM.findDOMNode(this.refs.myCanvas);
+        let ctx = canvas.getContext('2d');
+
+        if (myChart == undefined) {
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: this.props.temperature.years,
+                    datasets: [{
+                        label: 'Mean temperature in °C per year_index for ' + this.props.temperature.month,
+                        ylabel: 'test',
+                        data: this.props.temperature.meanTemperature,
+                        backgroundColor: 'rgba(68, 108, 179, 0.2)',
+                        borderColor: 'rgba(68, 108, 179,1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    hover: {
+                        // Overrides the global setting
+                        mode: 'nearest'
+                    }
+                }
+            });
+        }
+
+        else {
+
+            myChart.destroy()
+            myChart = undefined;
+            this.updateCanvas()
+
+        }
+    }
+
+    componentWillMount() {
+        this.props.getTemperature(1);
+    }
+
+    componentDidUpdate() {
+        this.updateCanvas();
+    }
+
+    dropdownChanged(index) {
+        this.props.getTemperature(index + 1);
+    }
+
+
+    render() {
+        var months = [&quot;January&quot;, &quot;February&quot;, &quot;March&quot;, &quot;April&quot;, &quot;May&quot;,
+            &quot;June&quot;, &quot;July&quot;, &quot;August&quot;, &quot;September&quot;, &quot;October&quot;, &quot;November&quot;, &quot;December&quot;]
+
+        var options = {responsive: true, showTooltips: false, fill: false}
+
+        return (&lt;div className={&quot;container&quot;}&gt;
+
+
+                &lt;canvas ref=&quot;myCanvas&quot;/&gt;
+
+
+                &lt;DropdownButton title={this.props.temperature.month} id=&quot;bg-nested-dropdown&quot;&gt;
+                    {months.map((val, index) =&gt; {
+                        return &lt;MenuItem key={index} onClick={() =&gt; {
+                            this.dropdownChanged(index)
+                        } }&gt;{val}&lt;/MenuItem&gt;
+                    })}
+
+                &lt;/DropdownButton&gt;
+            &lt;/div&gt;
+        )
+    }
+}
+
+// maps the state object to prop object
+
+function mapStateToProps(state) {
+    return {
+        temperature: state.temperature
+    }
+}
+
+// matches the dispatch/actions to the prop object
+function matchDispatchToProps(dispatch) {
+    return bindActionCreators({getTemperature: getTemperature}, dispatch)
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(Temperature);</code></pre>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p>Documentation generated with <a href="https://github.com/mr-doc/mr-doc">Mr. Doc </a> created by <a href="https://twitter.com/FGRibreau" data-show-count="false" class="twitter-follow-button">Francois-Guillaume Ribreau </a></p>
+        <p>Mr. Doc is sponsored by <a href="http://bringr.net/?btt" title="Outil d'analyse des réseaux sociaux" class="bringr">Bringr </a> and <a href="https://redsmin.com/?btt" title="Full Redis GUI" class="redsmin">Redsmin</a></p>
+        <p>Theme borrowed from Twitter Bootstrap</p>
+      </div>
+    </footer>
+    <script src="../../js/twitter-widget.min.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap-transition.min.js"></script>
+    <script src="../../js/bootstrap-scrollspy.min.js"></script>
+    <script src="../../js/bootstrap-dropdown.min.js"></script>
+    <script src="../../js/bootstrap-collapse.min.js"></script>
+    <script src="../../js/bootstrap-affix.min.js"></script>
+    <script src="../../js/prism.min.js"></script>
+    <script src="../../js/index.min.js"></script>
+  </body>
+</html>

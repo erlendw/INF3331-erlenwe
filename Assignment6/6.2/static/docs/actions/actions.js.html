@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" charset="utf-8">
+    <title>mr-doc</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/cayman.min.css">
+    <link rel="stylesheet" href="../css/prism.min.css">
+    <link rel="stylesheet" href="../css/index.min.css">
+    <link rel="stylesheet" href="../css/docs.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-responsive.min.css">
+  </head>
+  <body data-spy="scroll" data-target=".scrollspy">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container"><a class="brand">Mr. Doc</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right sponsored"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header id="overview" class="jumbotron subhead">
+      <div class="container">
+        <h1>mr-doc</h1>
+        <p class="lead"></p>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li><a href="../index.html">Main</a></li>
+            <li class="active"><a href="../actions/actions.js.html">actions/actions.js</a></li>
+            <li><a href="../containers/6.2/co2.js.html">containers/6.2/co2.js</a></li>
+            <li><a href="../containers/6.2/temperature.js.html">containers/6.2/temperature.js</a></li>
+            <li><a href="../containers/6.3/co2.js.html">containers/6.3/co2.js</a></li>
+            <li><a href="../containers/6.3/temperature.js.html">containers/6.3/temperature.js</a></li>
+            <li><a href="../containers/6.4/co2_contry.js.html">containers/6.4/co2_contry.js</a></li>
+            <li><a href="../containers/header.js.html">containers/header.js</a></li>
+            <li><a href="../main.js.html">main.js</a></li>
+            <li><a href="../reducers/co2.js.html">reducers/co2.js</a></li>
+            <li><a href="../reducers/reducers.js.html">reducers/reducers.js</a></li>
+            <li><a href="../reducers/temperature.js.html">reducers/temperature.js</a></li>
+            <li><a href="../server.js.html">server.js</a></li>
+            <li><a href="../webpack.config.js.html">webpack.config.js</a></li>
+          </ul>
+          <div class="scrollspy">
+            <ul class="nav nav-list bs-docs-sidenav affix-top">
+            </ul>
+          </div>
+        </div>
+        <div class="span9">
+          <div class="description"></div>
+          <pre><code class="language-javascript">import superagent from 'superagent';
+
+// action has two parts
+// 
+
+//first is the type, these are specified as constants i.e 
+// &quot;SEND_MESSAGE&quot;
+
+//the other one is the payload, or any information that the app
+//needs to have
+
+//the entire function is called the action creator
+
+export const tempUpdated = (data) =&gt; {
+    //this returns the action
+    console.log(data)
+    return {
+        type: &quot;TEMPERATURE_UPDATED&quot;, //type of action
+        payload: data //payload contains the data that will be passed to the event handler
+    }
+}
+
+export const co2Updated = (data) =&gt; {
+    //this returns the action
+    return {
+        type: &quot;CO2_UPDATED&quot;, //type of action
+        payload: data //payload contains the data that will be passed to the event handler
+    }
+}
+
+
+export const getTemperature_Param = (obj) =&gt; {
+
+    var dataToSend = {}
+
+    for(var key in obj){
+
+        console.log(key)
+
+        if(obj.hasOwnProperty(key)){
+
+                console.log(typeof  obj[key])
+
+
+                if(obj[key] != undefined){
+                    if(typeof obj[key] == &quot;string&quot;){
+                        if(obj[key].length&gt;0){
+                            dataToSend[key] = obj[key]
+                        }
+                    }
+                    if(typeof obj[key] == &quot;number&quot;){
+                        dataToSend[key] = obj[key]
+                    }
+                }
+
+
+        }
+    }
+
+    console.log(dataToSend);
+
+
+    return (dispatch) =&gt; {
+        return superagent.post(&quot;http://localhost:5000/getTemp&quot;).set('Content-Type', 'application/json').send(JSON.stringify(dataToSend)).end((error, response) =&gt; {
+            if (!error &amp;&amp; response) {
+                //localStorage.setItem('response', JSON.stringify(response.body))
+
+                var inData = JSON.parse(response.text);
+
+                dispatch(tempUpdated(inData))
+
+            } else {
+                console.log('There was an error fetching from GitHub', error);
+            }
+        });
+    }
+
+
+
+
+};
+
+export const getCo2_Param = (obj) =&gt; {
+
+    var dataToSend = {}
+
+    for(var key in obj){
+
+        console.log(key)
+
+        if(obj.hasOwnProperty(key)){
+
+                console.log(typeof  obj[key])
+
+                if(obj[key] != undefined){
+                    if(typeof obj[key] == &quot;string&quot;){
+                        if(obj[key].length&gt;0){
+                            dataToSend[key] = obj[key]
+                        }
+                    }
+                    if(typeof obj[key] == &quot;number&quot;){
+                        dataToSend[key] = obj[key]
+                    }
+                }
+
+
+        }
+    }
+
+    console.log(dataToSend);
+
+
+    return (dispatch) =&gt; {
+        return superagent.post(&quot;http://localhost:5000/getCo2&quot;).set('Content-Type', 'application/json').send(JSON.stringify(dataToSend)).end((error, response) =&gt; {
+            if (!error &amp;&amp; response) {
+                //localStorage.setItem('response', JSON.stringify(response.body))
+
+                var inData = JSON.parse(response.text);
+
+                dispatch(co2Updated(inData))
+
+            } else {
+                console.log('There was an error fetching from GitHub', error);
+            }
+        });
+    }
+};
+
+
+export const getCo2_Param_Contry = (obj) =&gt; {
+
+    var dataToSend = {}
+
+    for(var key in obj){
+
+        if(obj.hasOwnProperty(key)){
+
+                console.log(typeof  obj[key])
+
+                if(obj[key] != undefined){
+                    if(typeof obj[key] == &quot;string&quot;){
+                        if(obj[key].length&gt;0){
+                            dataToSend[key] = obj[key]
+                        }
+                    }
+                    if(typeof obj[key] == &quot;number&quot;){
+                        dataToSend[key] = obj[key]
+                    }
+                }
+
+
+        }
+    }
+
+
+    return (dispatch) =&gt; {
+        return superagent.post(&quot;http://localhost:5000/getCo2ByContry&quot;).send(JSON.stringify(dataToSend)).set('Content-Type', 'application/json').end((error, response) =&gt; {
+            if (!error &amp;&amp; response) {
+                //localStorage.setItem('response', JSON.stringify(response.body))
+
+                var inData = JSON.parse(response.text);
+
+                dispatch(co2Updated(inData))
+
+            } else {
+                console.log('There was an error fetching from GitHub', error);
+            }
+        });
+    }
+};
+
+export const getTemperature = (month) =&gt; {
+    return (dispatch) =&gt; {
+        return superagent.get(&quot;http://localhost:5000/getTemp/&quot; + month).set('Content-Type', 'application/json').end((error, response) =&gt; {
+            if (!error &amp;&amp; response) {
+                //localStorage.setItem('response', JSON.stringify(response.body))
+
+                var inData = JSON.parse(response.text)
+
+
+                var label = []
+
+                inData.years.map((year,index)=&gt;{
+
+                    if(index % 3 == 0){
+
+                        label.push(year)
+
+                    }else{
+                        label.push(&quot;&quot;)
+                    }
+
+                })
+
+
+            
+                dispatch(tempUpdated(inData))
+
+
+
+
+
+                
+            } else {
+                console.log('There was an error fetching from GitHub', error);
+            }
+        });
+    }
+};
+
+
+export const getCo2 = () =&gt; {
+    return (dispatch) =&gt; {
+        return superagent.get(&quot;http://localhost:5000/getCo2&quot;).set('Content-Type', 'application/json').end((error, response) =&gt; {
+            if (!error &amp;&amp; response) {
+                //localStorage.setItem('response', JSON.stringify(response.body))
+
+                var inData = JSON.parse(response.text)
+
+             
+            
+                dispatch(co2Updated(inData))
+
+
+
+
+
+                
+            } else {
+                console.log('There was an error fetching from GitHub', error);
+            }
+        });
+    }
+};</code></pre>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p>Documentation generated with <a href="https://github.com/mr-doc/mr-doc">Mr. Doc </a> created by <a href="https://twitter.com/FGRibreau" data-show-count="false" class="twitter-follow-button">Francois-Guillaume Ribreau </a></p>
+        <p>Mr. Doc is sponsored by <a href="http://bringr.net/?btt" title="Outil d'analyse des réseaux sociaux" class="bringr">Bringr </a> and <a href="https://redsmin.com/?btt" title="Full Redis GUI" class="redsmin">Redsmin</a></p>
+        <p>Theme borrowed from Twitter Bootstrap</p>
+      </div>
+    </footer>
+    <script src="../js/twitter-widget.min.js"></script>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap-transition.min.js"></script>
+    <script src="../js/bootstrap-scrollspy.min.js"></script>
+    <script src="../js/bootstrap-dropdown.min.js"></script>
+    <script src="../js/bootstrap-collapse.min.js"></script>
+    <script src="../js/bootstrap-affix.min.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <script src="../js/index.min.js"></script>
+  </body>
+</html>
