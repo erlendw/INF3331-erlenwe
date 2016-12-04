@@ -233,3 +233,67 @@ export const getCo2 = () => {
     }
 };
 
+export const predictTheFuture = () => {
+    return (dispatch) => {
+        return superagent.get("http://localhost:5000/predictingTheFuture").set('Content-Type', 'application/json').end((error, response) => {
+            if (!error && response) {
+                //localStorage.setItem('response', JSON.stringify(response.body))
+
+                var inData = JSON.parse(response.text)
+
+                console.log(inData.years.indexOf(inData.finalrealyear))
+                var real_cutoff = inData.years.indexOf(inData.finalrealyear)
+
+
+
+                var real_years = inData.years.slice(0,real_cutoff+1)
+                var real_temperatures = inData.meanTemperature.slice(0, real_cutoff+1)
+
+                var predicion_years = inData.years.slice(real_cutoff+1)
+                var prediction_temperatures =     inData.meanTemperature.slice(real_cutoff+1)
+
+
+
+
+
+                /*inData.years = real_years;*/
+                inData.meanTemperature = real_temperatures;
+
+                var real_scatter = []
+
+
+                for(var i = 0; i < inData.meanTemperature.length; i++){
+
+                    var scatterpiont = {x: real_years[i],y:real_temperatures[i]}
+
+                    real_scatter.push(scatterpiont)
+
+                }
+
+                var predicted_scatter = []
+
+
+                for(var i = 0; i < inData.meanTemperature.length; i++){
+
+                    var scatterpiont = {x: predicion_years[i],y:prediction_temperatures[i]}
+
+                    predicted_scatter.push(scatterpiont)
+
+                }
+
+                console.log(real_scatter)
+
+
+                inData.meanTemperature = real_scatter
+                inData.predictedMeanTemperatures = predicted_scatter
+
+
+                dispatch(tempUpdated(inData))
+
+            } else {
+                console.log('There was an error fetching from GitHub', error);
+            }
+        });
+    }
+};
+

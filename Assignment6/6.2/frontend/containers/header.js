@@ -32,7 +32,7 @@ class Header extends React.Component {
 
     render() {
 
-        return (<Navbar>
+        return (<Navbar fluid>
             <Navbar.Header>
                 <Navbar.Brand>
                     <a onClick={() => {this.changeUrl("/")}}>EW scientific</a>
@@ -47,6 +47,7 @@ class Header extends React.Component {
                         <MenuItem onClick={() => {this.changeUrl("/temp_63")}}>6.3 Temperature</MenuItem>
                         <MenuItem onClick={() => {this.changeUrl("/co2_63")}}>6.3 Co2</MenuItem>
                         <MenuItem onClick={() => {this.changeUrl("/co2_contry")}}>6.4 Co2 by contry</MenuItem>
+                        <MenuItem onClick={() => {this.changeUrl("/temp_prediction")}}>6.6 Proprietary Temperature prediction algorythm</MenuItem>
                     </NavDropdown>
                     <NavDropdown title="Docs" id="basic-nav-dropdown">
                         <div><a href="/docs/temperature_CO2_plotter">temperature_CO2_plotter</a></div>

@@ -42,7 +42,7 @@ def returnDocsFlask():
     '''
     return render_template('web_visualization.m.html')
 
-@app.route('/js/<path:filename>')
+@app.route('/<path:filename>')
 def serve_static(filename):
     '''
     this method is responsible for returning all static files. The front end is transpiled and served as one large
@@ -375,7 +375,6 @@ def predictingTheFuture(month=1, years=100):
     this, you will be able to get an estimate of the CO2 emissions and temperature
     in later years.
     '''
-
     increase = x[len(x) - 1] / x[len(x) - 2]
     finalrealyear = y_years[len(y_years)-1]
     for i in range(years):
@@ -390,7 +389,9 @@ def predictingTheFuture(month=1, years=100):
     linearfunc = slope * x_np + intercept
     print(y_years)
 
-    return json.dumps({'years': y_years,'arbitraryCo2Units' : linearfunc.tolist() , 'finalrealyear' : finalrealyear})
+    return json.dumps({'years': y_years,'meanTemperature' : linearfunc.tolist() , 'finalrealyear' : finalrealyear})
+
+#    return json.dumps({'years': x, 'meanTemperature': y, 'month': months[month - 1]})
 
 
 

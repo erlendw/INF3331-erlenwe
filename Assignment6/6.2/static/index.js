@@ -62,11 +62,11 @@
 
 	var _reactRedux = __webpack_require__(458);
 
-	var _reduxThunk = __webpack_require__(682);
+	var _reduxThunk = __webpack_require__(683);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-	var _reducers = __webpack_require__(683);
+	var _reducers = __webpack_require__(684);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
@@ -21502,6 +21502,10 @@
 
 	var _co2_contry2 = _interopRequireDefault(_co2_contry);
 
+	var _temperature = __webpack_require__(682);
+
+	var _temperature2 = _interopRequireDefault(_temperature);
+
 	var _reactRouter = __webpack_require__(467);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -21539,7 +21543,8 @@
 	                        _react2.default.createElement(_reactRouter.Route, { path: '/co2_62', component: _Co2.default }),
 	                        _react2.default.createElement(_reactRouter.Route, { path: '/temp_63', component: _Temperature4.default }),
 	                        _react2.default.createElement(_reactRouter.Route, { path: '/co2_63', component: _Co4.default }),
-	                        _react2.default.createElement(_reactRouter.Route, { path: '/co2_contry', component: _co2_contry2.default })
+	                        _react2.default.createElement(_reactRouter.Route, { path: '/co2_contry', component: _co2_contry2.default }),
+	                        _react2.default.createElement(_reactRouter.Route, { path: '/temp_prediction', component: _temperature2.default })
 	                    )
 	                )
 	            );
@@ -42342,7 +42347,7 @@
 
 	            return _react2.default.createElement(
 	                _reactBootstrap.Navbar,
-	                null,
+	                { fluid: true },
 	                _react2.default.createElement(
 	                    _reactBootstrap.Navbar.Header,
 	                    null,
@@ -42405,6 +42410,13 @@
 	                                    _this2.changeUrl("/co2_contry");
 	                                } },
 	                            "6.4 Co2 by contry"
+	                        ),
+	                        _react2.default.createElement(
+	                            _reactBootstrap.MenuItem,
+	                            { onClick: function onClick() {
+	                                    _this2.changeUrl("/temp_prediction");
+	                                } },
+	                            "6.6 Proprietary Temperature prediction algorythm"
 	                        )
 	                    ),
 	                    _react2.default.createElement(
@@ -44144,7 +44156,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.getCo2 = exports.getTemperature = exports.getCo2_Param_Contry = exports.getCo2_Param = exports.getTemperature_Param = exports.co2Updated = exports.tempUpdated = undefined;
+	exports.predictTheFuture = exports.getCo2 = exports.getTemperature = exports.getCo2_Param_Contry = exports.getCo2_Param = exports.getTemperature_Param = exports.co2Updated = exports.tempUpdated = undefined;
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -44341,6 +44353,22 @@
 	                var inData = JSON.parse(response.text);
 
 	                dispatch(co2Updated(inData));
+	            } else {
+	                console.log('There was an error fetching from GitHub', error);
+	            }
+	        });
+	    };
+	};
+
+	var predictTheFuture = exports.predictTheFuture = function predictTheFuture() {
+	    return function (dispatch) {
+	        return _superagent2.default.get("http://localhost:5000/predictingTheFuture").set('Content-Type', 'application/json').end(function (error, response) {
+	            if (!error && response) {
+	                //localStorage.setItem('response', JSON.stringify(response.body))
+
+	                var inData = JSON.parse(response.text);
+
+	                dispatch(tempUpdated(inData));
 	            } else {
 	                console.log('There was an error fetching from GitHub', error);
 	            }
@@ -77099,6 +77127,370 @@
 
 /***/ },
 /* 682 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(34);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _redux = __webpack_require__(437);
+
+	var _reactRedux = __webpack_require__(458);
+
+	var _actions = __webpack_require__(466);
+
+	var _reactBootstrap = __webpack_require__(173);
+
+	var _graph = __webpack_require__(520);
+
+	var _graph2 = _interopRequireDefault(_graph);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var myChart;
+	var oldData;
+
+	var Temperature = function (_React$Component) {
+	    _inherits(Temperature, _React$Component);
+
+	    function Temperature() {
+	        _classCallCheck(this, Temperature);
+
+	        var _this = _possibleConstructorReturn(this, (Temperature.__proto__ || Object.getPrototypeOf(Temperature)).call(this));
+
+	        _this.state = {
+	            month: 1,
+	            updateCanvas: true,
+	            y_min: '',
+	            y_max: '',
+	            x_min: '',
+	            x_max: ''
+	        };
+	        return _this;
+	    }
+
+	    _createClass(Temperature, [{
+	        key: "handleSubmit",
+	        value: function handleSubmit() {
+
+	            console.log(this.state);
+
+	            oldData = this.props.temperature;
+
+	            this.props.getTemperature_Param(this.state);
+	            this.setState({
+	                updateCanvas: true
+	            });
+	        }
+	    }, {
+	        key: "handleReset",
+	        value: function handleReset() {
+
+	            this.setState({
+	                month: 1,
+	                updateCanvas: true,
+	                y_min: '',
+	                y_max: '',
+	                x_min: '',
+	                x_max: ''
+
+	            });
+
+	            this.props.predictTheFuture(1);
+	        }
+	    }, {
+	        key: "updateCanvas",
+	        value: function updateCanvas() {
+	            var canvas = _reactDom2.default.findDOMNode(this.refs.myCanvas);
+	            var ctx = canvas.getContext('2d');
+
+	            if (myChart == undefined) {
+	                myChart = new Chart(ctx, {
+	                    type: 'line',
+	                    data: {
+	                        labels: this.props.temperature.years,
+	                        datasets: [{
+	                            label: 'Mean temperature in °C per year_index for ' + this.props.temperature.month,
+	                            ylabel: 'test',
+	                            data: this.props.temperature.meanTemperature,
+	                            backgroundColor: 'rgba(68, 108, 179, 0.2)',
+	                            borderColor: 'rgba(68, 108, 179,1)',
+	                            borderWidth: 1
+	                        }]
+	                    },
+	                    options: {
+	                        hover: {
+	                            // Overrides the global setting
+	                            mode: 'nearest'
+	                        }
+	                    }
+	                });
+	            } else {
+
+	                myChart.destroy();
+	                myChart = undefined;
+	                this.updateCanvas();
+	            }
+	        }
+	    }, {
+	        key: "componentWillMount",
+	        value: function componentWillMount() {
+	            this.props.predictTheFuture();
+	        }
+	    }, {
+	        key: "componentDidUpdate",
+	        value: function componentDidUpdate() {
+
+	            console.log(oldData === this.props.temperature);
+
+	            if (!(oldData === this.props.temperature)) {
+
+	                this.updateCanvas();
+	                oldData = this.props.temperature;
+	            }
+	        }
+	    }, {
+	        key: "dropdownChanged",
+	        value: function dropdownChanged(index) {
+	            this.setState({
+
+	                month: index + 1
+
+	            });
+
+	            console.log(this.state);
+	        }
+	    }, {
+	        key: "handleChange",
+	        value: function handleChange(e) {
+
+	            switch (e.target.id) {
+
+	                case 'y_min':
+
+	                    this.setState({
+	                        y_min: e.target.value
+	                    });
+	                    break;
+	                case 'y_max':
+
+	                    this.setState({
+	                        y_max: e.target.value
+	                    });
+	                    break;
+	                case 'x_min':
+
+	                    this.setState({
+	                        x_min: e.target.value
+	                    });
+	                    break;
+	                case 'x_max':
+
+	                    this.setState({
+	                        x_max: e.target.value
+	                    });
+	                    break;
+	            }
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            var _this2 = this;
+
+	            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+	            return _react2.default.createElement(
+	                "div",
+	                null,
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: _graph2.default.graph },
+	                    _react2.default.createElement("canvas", { ref: "myCanvas" })
+	                ),
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: _graph2.default.sidebar },
+	                    _react2.default.createElement(
+	                        _reactBootstrap.Form,
+	                        { horizontal: true },
+	                        _react2.default.createElement(
+	                            _reactBootstrap.FormGroup,
+	                            { controlId: "month" },
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { componentClass: _reactBootstrap.ControlLabel, sm: 4 },
+	                                "Month"
+	                            ),
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { sm: 6 },
+	                                _react2.default.createElement(
+	                                    _reactBootstrap.DropdownButton,
+	                                    { title: months[this.state.month - 1], id: "bg-nested-dropdown" },
+	                                    months.map(function (val, index) {
+	                                        return _react2.default.createElement(
+	                                            _reactBootstrap.MenuItem,
+	                                            { key: index, onClick: function onClick() {
+	                                                    _this2.dropdownChanged(index);
+	                                                } },
+	                                            val
+	                                        );
+	                                    })
+	                                )
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            _reactBootstrap.FormGroup,
+	                            { controlId: "y_min" },
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { componentClass: _reactBootstrap.ControlLabel, sm: 4 },
+	                                "Y min (temp)"
+	                            ),
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { sm: 6 },
+	                                _react2.default.createElement(_reactBootstrap.FormControl, { type: "number", value: this.state.y_min, onChange: function onChange(e) {
+	                                        _this2.handleChange(e);
+	                                    } })
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            _reactBootstrap.FormGroup,
+	                            { controlId: "y_max" },
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { componentClass: _reactBootstrap.ControlLabel, sm: 4 },
+	                                "Y max (temp)"
+	                            ),
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { sm: 6 },
+	                                _react2.default.createElement(_reactBootstrap.FormControl, { type: "number", value: this.state.y_max, onChange: function onChange(e) {
+	                                        _this2.handleChange(e);
+	                                    } })
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            _reactBootstrap.FormGroup,
+	                            { controlId: "x_min" },
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { componentClass: _reactBootstrap.ControlLabel, sm: 4 },
+	                                "X min (year)"
+	                            ),
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { sm: 6 },
+	                                _react2.default.createElement(_reactBootstrap.FormControl, { type: "number", value: this.state.x_min, onChange: function onChange(e) {
+	                                        _this2.handleChange(e);
+	                                    } })
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            _reactBootstrap.FormGroup,
+	                            { controlId: "x_max" },
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { componentClass: _reactBootstrap.ControlLabel, sm: 4 },
+	                                "X max (year)"
+	                            ),
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { sm: 6 },
+	                                _react2.default.createElement(_reactBootstrap.FormControl, { type: "number", value: this.state.x_max, onChange: function onChange(e) {
+	                                        _this2.handleChange(e);
+	                                    } })
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            _reactBootstrap.FormGroup,
+	                            { controlId: "buttons" },
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { componentClass: _reactBootstrap.ControlLabel, sm: 4 },
+	                                "Submit"
+	                            ),
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { sm: 6 },
+	                                _react2.default.createElement(
+	                                    _reactBootstrap.Button,
+	                                    {
+	                                        onClick: function onClick() {
+	                                            _this2.handleSubmit();
+	                                        }
+	                                    },
+	                                    "Update chart"
+	                                )
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            _reactBootstrap.FormGroup,
+	                            { controlId: "Reset" },
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { componentClass: _reactBootstrap.ControlLabel, sm: 4 },
+	                                "Submit"
+	                            ),
+	                            _react2.default.createElement(
+	                                _reactBootstrap.Col,
+	                                { sm: 6 },
+	                                _react2.default.createElement(
+	                                    _reactBootstrap.Button,
+	                                    {
+	                                        onClick: function onClick() {
+	                                            _this2.handleReset();
+	                                        }
+	                                    },
+	                                    "Reset chart"
+	                                )
+	                            )
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Temperature;
+	}(_react2.default.Component);
+
+	// maps the state object to prop object
+
+	function mapStateToProps(state) {
+	    return {
+	        temperature: state.temperature
+	    };
+	}
+
+	// matches the dispatch/actions to the prop object
+	function matchDispatchToProps(dispatch) {
+	    return (0, _redux.bindActionCreators)({ predictTheFuture: _actions.predictTheFuture }, dispatch);
+	}
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, matchDispatchToProps)(Temperature);
+
+/***/ },
+/* 683 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -77126,7 +77518,7 @@
 	exports['default'] = thunk;
 
 /***/ },
-/* 683 */
+/* 684 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -77137,11 +77529,11 @@
 
 	var _redux = __webpack_require__(437);
 
-	var _temperature = __webpack_require__(684);
+	var _temperature = __webpack_require__(685);
 
 	var _temperature2 = _interopRequireDefault(_temperature);
 
-	var _co = __webpack_require__(685);
+	var _co = __webpack_require__(686);
 
 	var _co2 = _interopRequireDefault(_co);
 
@@ -77155,7 +77547,7 @@
 	exports.default = chatApp;
 
 /***/ },
-/* 684 */
+/* 685 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -77180,7 +77572,7 @@
 	};
 
 /***/ },
-/* 685 */
+/* 686 */
 /***/ function(module, exports) {
 
 	'use strict';

@@ -300,4 +300,4 @@ def predictingTheFuture(month=1, years = 0):
 # ax+b
 
 
-predictingTheFuture(month=6,years=10)
+predictingTheFuture(month=1,years=1000)
