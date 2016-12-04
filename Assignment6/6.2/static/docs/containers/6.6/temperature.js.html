@@ -36,8 +36,8 @@
             <li><a href="../../containers/6.2/temperature.js.html">containers/6.2/temperature.js</a></li>
             <li><a href="../../containers/6.3/co2.js.html">containers/6.3/co2.js</a></li>
             <li><a href="../../containers/6.3/temperature.js.html">containers/6.3/temperature.js</a></li>
-            <li class="active"><a href="../../containers/6.4/co2_contry.js.html">containers/6.4/co2_contry.js</a></li>
-            <li><a href="../../containers/6.6/temperature.js.html">containers/6.6/temperature.js</a></li>
+            <li><a href="../../containers/6.4/co2_contry.js.html">containers/6.4/co2_contry.js</a></li>
+            <li class="active"><a href="../../containers/6.6/temperature.js.html">containers/6.6/temperature.js</a></li>
             <li><a href="../../containers/header.js.html">containers/header.js</a></li>
             <li><a href="../../containers/start.js.html">containers/start.js</a></li>
           </ul>
@@ -47,12 +47,12 @@
           </div>
         </div>
         <div class="span9">
-          <div class="description"><p>Created by erlend on 02.12.2016.</p></div>
+          <div class="description"></div>
           <pre><code class="language-javascript">import React from &quot;react&quot;;
 import ReactDOM from &quot;react-dom&quot;;
 import {bindActionCreators} from &quot;redux&quot;;
 import {connect} from &quot;react-redux&quot;;
-import {getCo2, getCo2_Param_Contry} from &quot;../../actions/actions&quot;;
+import {predictTheFuture} from &quot;../../actions/actions&quot;;
 import {
     Grid,
     Row,
@@ -63,95 +63,83 @@ import {
     FormControl,
     Form,
     ControlLabel,
-    Button,
-    Collapse,
-    Well
+    Button
 } from &quot;react-bootstrap&quot;;
 import graph from &quot;../../styles/graph.css&quot;;
-import text from &quot;../../styles/text.css&quot;;
 
 var myChart;
 var oldData;
 
 
-class Co2 extends React.Component {
+class Temperature extends React.Component {
 
 
     constructor() {
         super();
         this.state = {
-            year_index: 0,
-            year:0,
-            y_min: '',
-            y_max: '',
-            x_min: '',
-            x_max: ''
+            month: 1,
+            updateCanvas: true,
+            years:100
         };
     }
 
     handleSubmit() {
 
-        console.log(this.state);
+        console.log(this.state)
 
-        oldData = this.props.Co2;
+        oldData = this.props.temperature;
 
-        this.props.getCo2_Param_Contry(this.state);
+        this.props.predictTheFuture(this.state);
+
         this.setState({
             updateCanvas: true
         })
 
     }
 
+
     handleReset() {
 
         this.setState({
-            year: 1960,
-            year_index: 0,
+            month: 1,
             updateCanvas: true,
-            y_min: '',
-            y_max: '',
-            x_min: '',
-            x_max: ''
+            years: 100
 
         });
 
-        this.props.getCo2_Param_Contry({
-            year: 1960,
-            year_index: 0,
-            updateCanvas: true,
-            y_min: '',
-            y_max: '',
-            x_min: '',
-            x_max: ''
-
-        });
-
-
+        this.props.predictTheFuture(this.state)
     }
 
     updateCanvas() {
-
         let canvas = ReactDOM.findDOMNode(this.refs.myCanvas);
         let ctx = canvas.getContext('2d');
 
         if (myChart == undefined) {
             myChart = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
-                    labels: this.props.Co2.contry,
                     datasets: [{
-                        label: 'Co2 per year',
-                        data: this.props.Co2.arbitraryCo2Units,
+                        label: 'Based on actual co2 data',
+                        data: this.props.temperature.meanTemperature,
                         backgroundColor: 'rgba(68, 108, 179, 0.2)',
                         borderColor: 'rgba(68, 108, 179,1)',
                         borderWidth: 1
-                    }]
+                    },
+                        {
+                            label: 'Based on estimated co2 data',
+                            data: this.props.temperature.predictedMeanTemperatures,
+                            backgroundColor: 'rgba(207, 0, 15, 0.2)',
+                            borderColor: 'rgba(207, 0, 15, 1)',
+                            borderWidth: 1
+                        }
+                    ]
                 },
                 options: {
-                    hover: {
-                        // Overrides the global setting
-                        mode: 'nearest',
-                        responsive: true
+                    scales: {
+                        xAxes: [{
+                            type: 'linear',
+                            position: 'bottom'
+                        }]
                     }
                 }
             });
@@ -167,30 +155,25 @@ class Co2 extends React.Component {
     }
 
     componentWillMount() {
-        this.props.getCo2_Param_Contry();
+        this.props.predictTheFuture();
     }
 
     componentDidUpdate() {
 
-        console.log(oldData === this.props.Co2)
+        console.log(oldData === this.props.temperature)
 
-        if (!(oldData === this.props.Co2 )) {
+        if (!(oldData === this.props.temperature )) {
 
             this.updateCanvas();
-            oldData = this.props.Co2;
+            oldData = this.props.temperature;
         }
 
     }
 
     dropdownChanged(index) {
-
-        console.log(index)
-
         this.setState({
 
-            year: this.props.Co2.years[index],
-            year_index : index,
-            open: false
+            month: (index + 1)
 
         });
 
@@ -200,29 +183,9 @@ class Co2 extends React.Component {
     handleChange(e) {
 
         switch (e.target.id) {
-
-            case 'y_min':
-
+            case 'years':
                 this.setState({
-                    y_min: e.target.value
-                });
-                break;
-            case 'y_max':
-
-                this.setState({
-                    y_max: e.target.value
-                });
-                break;
-            case 'x_min':
-
-                this.setState({
-                    x_min: e.target.value
-                });
-                break;
-            case 'x_max':
-
-                this.setState({
-                    x_max: e.target.value
+                    years: e.target.value
                 });
                 break;
         }
@@ -230,15 +193,6 @@ class Co2 extends React.Component {
 
 
     render() {
-
-        if (this.props.Co2.years == undefined) {
-            var years = []
-        }
-        else {
-            var years = this.props.Co2.years
-        }
-
-
         var months = [&quot;January&quot;, &quot;February&quot;, &quot;March&quot;, &quot;April&quot;, &quot;May&quot;,
             &quot;June&quot;, &quot;July&quot;, &quot;August&quot;, &quot;September&quot;, &quot;October&quot;, &quot;November&quot;, &quot;December&quot;]
 
@@ -255,57 +209,32 @@ class Co2 extends React.Component {
 
                         &lt;FormGroup controlId=&quot;month&quot;&gt;
                             &lt;Col componentClass={ControlLabel} sm={4}&gt;
-                                Years
+                                Month
                             &lt;/Col&gt;
                             &lt;Col sm={6}&gt;
 
-                                &lt;Button onClick={ () =&gt; this.setState({open: !this.state.open})}&gt;
-                                    {years[this.state.year_index]}
-                                &lt;/Button&gt;
+                                &lt;DropdownButton title={months[this.state.month - 1]} id=&quot;bg-nested-dropdown&quot;&gt;
+                                    {months.map((val, index) =&gt; {
+                                        return &lt;MenuItem key={index} onClick={() =&gt; {
+                                            this.dropdownChanged(index)
+                                        } }&gt;{val}&lt;/MenuItem&gt;
+                                    })}
+
+                                &lt;/DropdownButton&gt;
 
                             &lt;/Col&gt;
                         &lt;/FormGroup&gt;
 
-
-                        &lt;Collapse in={this.state.open}&gt;
-                            &lt;div className={text.text}&gt;
-                                &lt;Well&gt;
-                                    &lt;Row&gt;
-                                    {
-                                        years.map((year, index) =&gt; {
-
-                                            return (
-                                                &lt;Col md={3} className={text.clickable} onClick={() =&gt; {this.dropdownChanged(index)}}&gt;{year}&lt;/Col&gt;
-                                            )
-
-                                        })}
-                                    &lt;/Row&gt;
-
-                                &lt;/Well&gt;
-                            &lt;/div&gt;
-                        &lt;/Collapse&gt;
-
-                        &lt;FormGroup controlId=&quot;y_min&quot;&gt;
+                        &lt;FormGroup controlId=&quot;years&quot;&gt;
                             &lt;Col componentClass={ControlLabel} sm={4}&gt;
-                                Y min (co2)
+                                Number of years to predict
                             &lt;/Col&gt;
                             &lt;Col sm={6}&gt;
-                                &lt;FormControl type=&quot;number&quot; value={this.state.y_min} onChange={(e) =&gt; {
+                                &lt;FormControl type=&quot;number&quot; value={this.state.years} onChange={(e) =&gt; {
                                     this.handleChange(e)
                                 }}/&gt;
                             &lt;/Col&gt;
                         &lt;/FormGroup&gt;
-                        &lt;FormGroup controlId=&quot;y_max&quot;&gt;
-                            &lt;Col componentClass={ControlLabel} sm={4}&gt;
-                                Y max (co2)
-                            &lt;/Col&gt;
-                            &lt;Col sm={6}&gt;
-                                &lt;FormControl type=&quot;number&quot; value={this.state.y_max} onChange={(e) =&gt; {
-                                    this.handleChange(e)
-                                }}/&gt;
-                            &lt;/Col&gt;
-                        &lt;/FormGroup&gt;
-
                         &lt;FormGroup controlId=&quot;buttons&quot;&gt;
 
                             &lt;Col componentClass={ControlLabel} sm={4}&gt;
@@ -348,17 +277,21 @@ class Co2 extends React.Component {
         )
     }
 }
+
+// maps the state object to prop object
+
 function mapStateToProps(state) {
     return {
-        Co2: state.co2
+        temperature: state.temperature
     }
 }
+
 // matches the dispatch/actions to the prop object
 function matchDispatchToProps(dispatch) {
-    return bindActionCreators({getCo2: getCo2, getCo2_Param_Contry: getCo2_Param_Contry}, dispatch)
+    return bindActionCreators({predictTheFuture: predictTheFuture}, dispatch)
 }
 
-export default connect(mapStateToProps, matchDispatchToProps)(Co2);</code></pre>
+export default connect(mapStateToProps, matchDispatchToProps)(Temperature);</code></pre>
         </div>
       </div>
     </div>

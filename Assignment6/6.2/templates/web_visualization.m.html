@@ -1054,6 +1054,7 @@ table {
     <li class="mono"><a href="#web_visualization.internal_error">internal_error</a></li>
     <li class="mono"><a href="#web_visualization.isBlank">isBlank</a></li>
     <li class="mono"><a href="#web_visualization.not_found">not_found</a></li>
+    <li class="mono"><a href="#web_visualization.predictingTheFuture">predictingTheFuture</a></li>
     <li class="mono"><a href="#web_visualization.returnDocsFlask">returnDocsFlask</a></li>
     <li class="mono"><a href="#web_visualization.returnDocsTemp">returnDocsTemp</a></li>
     <li class="mono"><a href="#web_visualization.serve_static">serve_static</a></li>
@@ -1082,6 +1083,7 @@ table {
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span><span class="n">make_response</span><span class="p">,</span> <span class="n">send_from_directory</span><span class="p">,</span> <span class="n">render_template</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
@@ -1121,7 +1123,7 @@ table {
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;web_visualization.m.html&#39;</span><span class="p">)</span>
 
-<span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/js/&lt;path:filename&gt;&#39;</span><span class="p">)</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/&lt;path:filename&gt;&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">serve_static</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    this method is responsible for returning all static files. The front end is transpiled and served as one large</span>
@@ -1387,6 +1389,91 @@ table {
                     <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">allCo2perContry</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">yearIndex</span><span class="p">]))</span>
 
     <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;contry&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;arbitraryCo2Units&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;years&#39;</span><span class="p">:</span> <span class="n">availableYears</span><span class="p">})</span>
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s2">&quot;/predictingTheFuture&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/predictingTheFuture/&lt;int:month&gt;/&lt;int:years&gt;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">predictingTheFuture</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">years</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># temp</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># co2</span>
+
+    <span class="n">y_years</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">x_years</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;temperature.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp</span><span class="p">:</span>
+        <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)</span>
+        <span class="n">readerofthecsv</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)):</span>
+        <span class="n">y_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">month</span><span class="p">])</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;co2.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">co2</span><span class="p">:</span>
+        <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">co2</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+        <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)</span>
+
+        <span class="n">readerofthecsv</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)):</span>
+            <span class="n">x_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="n">startyear_temp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span>
+    <span class="n">startyear_co2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x_years</span><span class="p">)</span>
+
+    <span class="n">endyear_temp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span>
+    <span class="n">endyear_co2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_years</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">startyear_temp</span> <span class="o">&gt;</span> <span class="n">startyear_co2</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x_years</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">startyear_temp</span><span class="p">):]</span>
+
+    <span class="k">elif</span> <span class="p">((</span><span class="n">startyear_temp</span> <span class="o">&lt;</span> <span class="n">startyear_co2</span><span class="p">)):</span>
+
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">y_years</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">startyear_co2</span><span class="p">):]</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">endyear_temp</span> <span class="o">&gt;</span> <span class="n">endyear_co2</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x_years</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">endyear_temp</span><span class="p">):]</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="n">endyear_temp</span> <span class="o">&lt;</span> <span class="n">endyear_co2</span><span class="p">):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="n">y_years</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">endyear_co2</span><span class="p">)]</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+    <span class="n">x_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">y_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">x_np</span><span class="p">,</span> <span class="n">y_np</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Further, assume that the rate of increase of CO2 emissions is going to be the</span>
+<span class="sd">    same as it is today (i.e. if there were X tons more CO2 emissions in 2016 than</span>
+<span class="sd">    in 2015, there will be X tons more CO2 emissions in 2017 than in 2016). Using</span>
+<span class="sd">    this, you will be able to get an estimate of the CO2 emissions and temperature</span>
+<span class="sd">    in later years.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">increase</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">finalrealyear</span> <span class="o">=</span> <span class="n">y_years</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">years</span><span class="p">):</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">increase</span><span class="p">))</span>
+        <span class="n">y_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_years</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">increase</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="n">x_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">linearfunc</span> <span class="o">=</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">x_np</span> <span class="o">+</span> <span class="n">intercept</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;years&#39;</span><span class="p">:</span> <span class="n">y_years</span><span class="p">,</span><span class="s1">&#39;meanTemperature&#39;</span> <span class="p">:</span> <span class="n">linearfunc</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="p">,</span> <span class="s1">&#39;finalrealyear&#39;</span> <span class="p">:</span> <span class="n">finalrealyear</span><span class="p">})</span>
+
+<span class="c1">#    return json.dumps({&#39;years&#39;: x, &#39;meanTemperature&#39;: y, &#39;month&#39;: months[month - 1]})</span>
+
 
 
 <span class="nd">@app.errorhandler</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
@@ -1846,6 +1933,106 @@ avoid conflict in the react router in the user interface.</p></div>
   
       
   <div class="item">
+    <div class="name def" id="web_visualization.predictingTheFuture">
+    <p>def <span class="ident">predictingTheFuture</span>(</p><p>month=1, years=100)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-web_visualization.predictingTheFuture', this);">Show source &equiv;</a></p>
+  <div id="source-web_visualization.predictingTheFuture" class="source">
+    <div class="codehilite"><pre><span></span><span class="nd">@app.route</span><span class="p">(</span><span class="s2">&quot;/predictingTheFuture&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/predictingTheFuture/&lt;int:month&gt;/&lt;int:years&gt;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">predictingTheFuture</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">years</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># temp</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># co2</span>
+
+    <span class="n">y_years</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">x_years</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;temperature.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp</span><span class="p">:</span>
+        <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)</span>
+        <span class="n">readerofthecsv</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)):</span>
+        <span class="n">y_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">month</span><span class="p">])</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;co2.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">co2</span><span class="p">:</span>
+        <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">co2</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+        <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)</span>
+
+        <span class="n">readerofthecsv</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)):</span>
+            <span class="n">x_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="n">startyear_temp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span>
+    <span class="n">startyear_co2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x_years</span><span class="p">)</span>
+
+    <span class="n">endyear_temp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span>
+    <span class="n">endyear_co2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_years</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">startyear_temp</span> <span class="o">&gt;</span> <span class="n">startyear_co2</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x_years</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">startyear_temp</span><span class="p">):]</span>
+
+    <span class="k">elif</span> <span class="p">((</span><span class="n">startyear_temp</span> <span class="o">&lt;</span> <span class="n">startyear_co2</span><span class="p">)):</span>
+
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">y_years</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">startyear_co2</span><span class="p">):]</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">endyear_temp</span> <span class="o">&gt;</span> <span class="n">endyear_co2</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x_years</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">endyear_temp</span><span class="p">):]</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="n">endyear_temp</span> <span class="o">&lt;</span> <span class="n">endyear_co2</span><span class="p">):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="n">y_years</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">endyear_co2</span><span class="p">)]</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+    <span class="n">x_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">y_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">x_np</span><span class="p">,</span> <span class="n">y_np</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Further, assume that the rate of increase of CO2 emissions is going to be the</span>
+<span class="sd">    same as it is today (i.e. if there were X tons more CO2 emissions in 2016 than</span>
+<span class="sd">    in 2015, there will be X tons more CO2 emissions in 2017 than in 2016). Using</span>
+<span class="sd">    this, you will be able to get an estimate of the CO2 emissions and temperature</span>
+<span class="sd">    in later years.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">increase</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">finalrealyear</span> <span class="o">=</span> <span class="n">y_years</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">years</span><span class="p">):</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">increase</span><span class="p">))</span>
+        <span class="n">y_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_years</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">increase</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="n">x_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">linearfunc</span> <span class="o">=</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">x_np</span> <span class="o">+</span> <span class="n">intercept</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;years&#39;</span><span class="p">:</span> <span class="n">y_years</span><span class="p">,</span><span class="s1">&#39;meanTemperature&#39;</span> <span class="p">:</span> <span class="n">linearfunc</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="p">,</span> <span class="s1">&#39;finalrealyear&#39;</span> <span class="p">:</span> <span class="n">finalrealyear</span><span class="p">})</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
     <div class="name def" id="web_visualization.returnDocsFlask">
     <p>def <span class="ident">returnDocsFlask</span>(</p><p>)</p>
     </div>
@@ -1910,7 +2097,7 @@ javascript file. But in theory any js, css etc could be placed in the static fol
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-web_visualization.serve_static', this);">Show source &equiv;</a></p>
   <div id="source-web_visualization.serve_static" class="source">
-    <div class="codehilite"><pre><span></span><span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/js/&lt;path:filename&gt;&#39;</span><span class="p">)</span>
+    <div class="codehilite"><pre><span></span><span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/&lt;path:filename&gt;&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">serve_static</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    this method is responsible for returning all static files. The front end is transpiled and served as one large</span>

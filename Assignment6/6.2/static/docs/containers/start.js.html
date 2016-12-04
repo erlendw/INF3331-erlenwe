@@ -38,8 +38,8 @@
             <li><a href="../containers/6.3/temperature.js.html">containers/6.3/temperature.js</a></li>
             <li><a href="../containers/6.4/co2_contry.js.html">containers/6.4/co2_contry.js</a></li>
             <li><a href="../containers/6.6/temperature.js.html">containers/6.6/temperature.js</a></li>
-            <li class="active"><a href="../containers/header.js.html">containers/header.js</a></li>
-            <li><a href="../containers/start.js.html">containers/start.js</a></li>
+            <li><a href="../containers/header.js.html">containers/header.js</a></li>
+            <li class="active"><a href="../containers/start.js.html">containers/start.js</a></li>
           </ul>
           <div class="scrollspy">
             <ul class="nav nav-list bs-docs-sidenav affix-top">
@@ -68,13 +68,14 @@ import {
     Button,
     ControlLabel,
     container,
-    DropdownButton
+    DropdownButton,
+    Jumbotron
 } from &quot;react-bootstrap&quot;;
 import {browserHistory} from &quot;react-router&quot;;
 
 
-class Header extends React.Component {
-    changeUrl(path){
+class Start extends React.Component {
+    changeUrl(path) {
 
         browserHistory.push(path)
 
@@ -82,40 +83,38 @@ class Header extends React.Component {
 
     render() {
 
-        return (&lt;Navbar fluid&gt;
-            &lt;Navbar.Header&gt;
-                &lt;Navbar.Brand&gt;
-                    &lt;a onClick={() =&gt; {this.changeUrl(&quot;/&quot;)}}&gt;EW scientific&lt;/a&gt;
-                &lt;/Navbar.Brand&gt;
-            &lt;/Navbar.Header&gt;
 
-                &lt;Nav&gt;
-                    &lt;NavItem onClick={() =&gt; {this.changeUrl(&quot;/&quot;)}}&gt;Home&lt;/NavItem&gt;
-                    &lt;NavDropdown title=&quot;Graph versions&quot; id=&quot;basic-nav-dropdown&quot;&gt;
+
+        return (&lt;div className=&quot;container&quot;&gt;
+
+
+            &lt;Jumbotron&gt;
+                &lt;h1&gt;Welcome!&lt;/h1&gt;
+                &lt;p&gt;Welcome to EW scientific, this is where the rendering of our ready crunched data happens&lt;/p&gt;
+                &lt;p&gt;All graph attributes can be changed in no perticular order, feel free to test it out! The graphs are in the header option &quot;graph versions&quot;&lt;/p&gt;
+                &lt;p&gt;The documentation for the python and js files are linked under docs in the header&lt;/p&gt;
+                &lt;p&gt;This webpage was built using react-js, charts are rendered by &lt;a href=&quot;http://www.chartjs.org/&quot;&gt;charts.js&lt;/a&gt;, documentation is built with
+                    &lt;a href=&quot;https://github.com/BurntSushi/pdoc&quot;&gt; pdoc&lt;/a&gt;  for python and &lt;a href=&quot;https://mr-doc.github.io/&quot;&gt;mr-doc&lt;/a&gt;  for js&lt;/p&gt;
+                &lt;p&gt;Select the graph you want to view in the dropdown below&lt;/p&gt;
+                &lt;p&gt; &lt;DropdownButton title=&quot;Graph versions&quot; id=&quot;basic-nav-dropdown&quot;&gt;
                         &lt;MenuItem onClick={() =&gt; {this.changeUrl(&quot;/temp_62&quot;)}}&gt;6.2 Temperature&lt;/MenuItem&gt;
                         &lt;MenuItem onClick={() =&gt; {this.changeUrl(&quot;/co2_62&quot;)}}&gt;6.2 Co2&lt;/MenuItem&gt;
                         &lt;MenuItem onClick={() =&gt; {this.changeUrl(&quot;/temp_63&quot;)}}&gt;6.3 Temperature&lt;/MenuItem&gt;
                         &lt;MenuItem onClick={() =&gt; {this.changeUrl(&quot;/co2_63&quot;)}}&gt;6.3 Co2&lt;/MenuItem&gt;
                         &lt;MenuItem onClick={() =&gt; {this.changeUrl(&quot;/co2_contry&quot;)}}&gt;6.4 Co2 by contry&lt;/MenuItem&gt;
                         &lt;MenuItem onClick={() =&gt; {this.changeUrl(&quot;/temp_prediction&quot;)}}&gt;6.6 Proprietary Temperature prediction algorythm&lt;/MenuItem&gt;
-                    &lt;/NavDropdown&gt;
-                    &lt;NavDropdown title=&quot;Docs&quot; id=&quot;basic-nav-dropdown&quot;&gt;
-                        &lt;div&gt;&lt;a href=&quot;/docs/temperature_CO2_plotter&quot;&gt;temperature_CO2_plotter&lt;/a&gt;&lt;/div&gt;
-                        &lt;div&gt;&lt;a href=&quot;/docs/web_visualization&quot;&gt;/docs/web_visualization&lt;/a&gt;&lt;/div&gt;
-                        &lt;div&gt;&lt;a href=&quot;/static/docs/index.html&quot;&gt;Javascript&lt;/a&gt;&lt;/div&gt;
-                    &lt;/NavDropdown&gt;
-                &lt;/Nav&gt;
+                    &lt;/DropdownButton&gt;&lt;/p&gt;
+            &lt;/Jumbotron&gt;
 
 
-
-        &lt;/Navbar&gt;)
+        &lt;/div&gt;)
 
 
     }
 
 }
 
-export default Header;</code></pre>
+export default Start;</code></pre>
         </div>
       </div>
     </div>

@@ -1070,6 +1070,7 @@ table {
 
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
 
@@ -1162,20 +1163,19 @@ table {
 
     <span class="k">if</span> <span class="p">(</span><span class="n">x_min</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
         <span class="n">x_min</span> <span class="o">=</span> <span class="p">(</span><span class="nb">min</span><span class="p">([</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]))</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">x_min</span><span class="p">)</span>
+
 
     <span class="k">if</span> <span class="p">(</span><span class="n">x_max</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
         <span class="n">x_max</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]))</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">x_max</span><span class="p">)</span>
+
 
     <span class="k">if</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
         <span class="n">y_max</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]))</span>
 
-        <span class="k">print</span><span class="p">(</span><span class="n">y_max</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">y_min</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
         <span class="n">y_min</span> <span class="o">=</span> <span class="p">(</span><span class="nb">min</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]))</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">y_min</span><span class="p">)</span>
+
 
     <span class="c1"># plot is created</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -1279,22 +1279,34 @@ table {
 <span class="c1"># assume that temperature is roughly a linear function of CO2 emission</span>
 <span class="c1"># f(x)=ax+b</span>
 
-<span class="k">def</span> <span class="nf">predictingTheFuture</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># temp</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># co2</span>
+<span class="k">def</span> <span class="nf">predictingTheFuture</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">years</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
 
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method predicts the grim frim future. It is based on a making a best fit plot on the scattered data of co2 x and</span>
+<span class="sd">    tmperature y, From that we are able to calculate our ax+b and create a linear function where x is the co2 per year</span>
+<span class="sd">    after 2012 the line is made from the estimated data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#sets up the empty arrays</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1">#contains the years of each of the datasets</span>
     <span class="n">y_years</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">x_years</span> <span class="o">=</span> <span class="p">[]</span>
 
+    <span class="c1">#opens the csv file</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;temperature.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp</span><span class="p">:</span>
         <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
         <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)</span>
         <span class="n">readerofthecsv</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
+    <span class="c1">#itterates the csv file</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)):</span>
         <span class="n">y_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
         <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">month</span><span class="p">])</span>
 
+    <span class="c1">#opens the csv file</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;co2.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">co2</span><span class="p">:</span>
         <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">co2</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 
@@ -1302,16 +1314,19 @@ table {
 
         <span class="n">readerofthecsv</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
+        <span class="c1">#itterates the csv file</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)):</span>
-            <span class="n">x_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
-            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">x_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
 
+    <span class="c1">#finding min and max of the years</span>
     <span class="n">startyear_temp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span>
     <span class="n">startyear_co2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x_years</span><span class="p">)</span>
 
     <span class="n">endyear_temp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span>
     <span class="n">endyear_co2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_years</span><span class="p">)</span>
 
+    <span class="c1">#cheks the datasets and removes the data that does not have a corresponing entry in the other dataset</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">startyear_temp</span> <span class="o">&gt;</span> <span class="n">startyear_co2</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x_years</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">startyear_temp</span><span class="p">):]</span>
 
@@ -1325,14 +1340,39 @@ table {
     <span class="k">elif</span> <span class="p">(</span><span class="n">endyear_temp</span> <span class="o">&lt;</span> <span class="n">endyear_co2</span><span class="p">):</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="n">y_years</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">endyear_co2</span><span class="p">)]</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-    <span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="c1">#converts to numpy array for polyfit</span>
+    <span class="n">x_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">y_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1">#calculates the slope and intercept (ax+b) where a = slope and b = intercept</span>
+    <span class="n">slope</span> <span class="p">,</span> <span class="n">intercept</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">x_np</span><span class="p">,</span><span class="n">y_np</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Further, assume that the rate of increase of CO2 emissions is going to be the</span>
+<span class="sd">    same as it is today (i.e. if there were X tons more CO2 emissions in 2016 than</span>
+<span class="sd">    in 2015, there will be X tons more CO2 emissions in 2017 than in 2016). Using</span>
+<span class="sd">    this, you will be able to get an estimate of the CO2 emissions and temperature</span>
+<span class="sd">    in later years.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1">#creates n new data points as specified by the number of years submitted by the end user</span>
+    <span class="n">increase</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">years</span><span class="p">):</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">increase</span><span class="p">))</span>
+        <span class="n">y_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_years</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">increase</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+
+    <span class="c1"># creates a new line based on the co2 data x</span>
+    <span class="n">x_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">linearfunc</span> <span class="o">=</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">x_np</span> <span class="o">+</span> <span class="n">intercept</span>
+
+
+    <span class="c1">#limits the plots for real and predicted data, plots them in different colors</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y_years</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">],</span> <span class="n">linearfunc</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">]</span> <span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y_years</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">:],</span> <span class="n">linearfunc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">:],</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="c1"># ax+b</span>
 </pre></div>
 
   </div>
@@ -1416,20 +1456,19 @@ table {
 
     <span class="k">if</span> <span class="p">(</span><span class="n">x_min</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
         <span class="n">x_min</span> <span class="o">=</span> <span class="p">(</span><span class="nb">min</span><span class="p">([</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]))</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">x_min</span><span class="p">)</span>
+
 
     <span class="k">if</span> <span class="p">(</span><span class="n">x_max</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
         <span class="n">x_max</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]))</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">x_max</span><span class="p">)</span>
+
 
     <span class="k">if</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
         <span class="n">y_max</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]))</span>
 
-        <span class="k">print</span><span class="p">(</span><span class="n">y_max</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">y_min</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
         <span class="n">y_min</span> <span class="o">=</span> <span class="p">(</span><span class="nb">min</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]))</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">y_min</span><span class="p">)</span>
+
 
     <span class="c1"># plot is created</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -1609,31 +1648,46 @@ if a range is supplied that does not makes sanse given the data, the nearest ava
       
   <div class="item">
     <div class="name def" id="temperature_CO2_plotter.predictingTheFuture">
-    <p>def <span class="ident">predictingTheFuture</span>(</p><p>month=1)</p>
+    <p>def <span class="ident">predictingTheFuture</span>(</p><p>month=1, years=0)</p>
     </div>
     
 
     
   
+    <div class="desc"><p>This method predicts the grim frim future. It is based on a making a best fit plot on the scattered data of co2 x and
+tmperature y, From that we are able to calculate our ax+b and create a linear function where x is the co2 per year
+after 2012 the line is made from the estimated data</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-temperature_CO2_plotter.predictingTheFuture', this);">Show source &equiv;</a></p>
   <div id="source-temperature_CO2_plotter.predictingTheFuture" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predictingTheFuture</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># temp</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># co2</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">predictingTheFuture</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">years</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
 
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method predicts the grim frim future. It is based on a making a best fit plot on the scattered data of co2 x and</span>
+<span class="sd">    tmperature y, From that we are able to calculate our ax+b and create a linear function where x is the co2 per year</span>
+<span class="sd">    after 2012 the line is made from the estimated data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#sets up the empty arrays</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1">#contains the years of each of the datasets</span>
     <span class="n">y_years</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">x_years</span> <span class="o">=</span> <span class="p">[]</span>
 
+    <span class="c1">#opens the csv file</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;temperature.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp</span><span class="p">:</span>
         <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
         <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)</span>
         <span class="n">readerofthecsv</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
+    <span class="c1">#itterates the csv file</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)):</span>
         <span class="n">y_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
         <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">month</span><span class="p">])</span>
 
+    <span class="c1">#opens the csv file</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;co2.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">co2</span><span class="p">:</span>
         <span class="n">readerofthecsv</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">co2</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 
@@ -1641,16 +1695,19 @@ if a range is supplied that does not makes sanse given the data, the nearest ava
 
         <span class="n">readerofthecsv</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
+        <span class="c1">#itterates the csv file</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">)):</span>
-            <span class="n">x_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
-            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">x_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">readerofthecsv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
 
+    <span class="c1">#finding min and max of the years</span>
     <span class="n">startyear_temp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span>
     <span class="n">startyear_co2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x_years</span><span class="p">)</span>
 
     <span class="n">endyear_temp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span>
     <span class="n">endyear_co2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_years</span><span class="p">)</span>
 
+    <span class="c1">#cheks the datasets and removes the data that does not have a corresponing entry in the other dataset</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">startyear_temp</span> <span class="o">&gt;</span> <span class="n">startyear_co2</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x_years</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">startyear_temp</span><span class="p">):]</span>
 
@@ -1664,10 +1721,37 @@ if a range is supplied that does not makes sanse given the data, the nearest ava
     <span class="k">elif</span> <span class="p">(</span><span class="n">endyear_temp</span> <span class="o">&lt;</span> <span class="n">endyear_co2</span><span class="p">):</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="n">y_years</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">endyear_co2</span><span class="p">)]</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-    <span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="c1">#converts to numpy array for polyfit</span>
+    <span class="n">x_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">y_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1">#calculates the slope and intercept (ax+b) where a = slope and b = intercept</span>
+    <span class="n">slope</span> <span class="p">,</span> <span class="n">intercept</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">x_np</span><span class="p">,</span><span class="n">y_np</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Further, assume that the rate of increase of CO2 emissions is going to be the</span>
+<span class="sd">    same as it is today (i.e. if there were X tons more CO2 emissions in 2016 than</span>
+<span class="sd">    in 2015, there will be X tons more CO2 emissions in 2017 than in 2016). Using</span>
+<span class="sd">    this, you will be able to get an estimate of the CO2 emissions and temperature</span>
+<span class="sd">    in later years.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1">#creates n new data points as specified by the number of years submitted by the end user</span>
+    <span class="n">increase</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">years</span><span class="p">):</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">increase</span><span class="p">))</span>
+        <span class="n">y_years</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_years</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">increase</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+
+    <span class="c1"># creates a new line based on the co2 data x</span>
+    <span class="n">x_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">linearfunc</span> <span class="o">=</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">x_np</span> <span class="o">+</span> <span class="n">intercept</span>
+
+
+    <span class="c1">#limits the plots for real and predicted data, plots them in different colors</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y_years</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">],</span> <span class="n">linearfunc</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">]</span> <span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y_years</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">:],</span> <span class="n">linearfunc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">y_years</span><span class="p">)</span> <span class="o">-</span> <span class="n">years</span><span class="p">:],</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>

@@ -95,20 +95,19 @@ def plot_co2(x_min=None, x_max=None, y_min=None, y_max=None):
 
     if (x_min == None):
         x_min = (min([n for n in x]))
-        print(x_min)
+
 
     if (x_max == None):
         x_max = (max([n for n in x]))
-        print(x_max)
+
 
     if (y_max == None):
         y_max = (max([int(n) for n in y]))
 
-        print(y_max)
 
     if (y_min == None):
         y_min = (min([int(n) for n in y]))
-        print(y_min)
+
 
     # plot is created
     plt.plot(x, y)
@@ -289,9 +288,6 @@ def predictingTheFuture(month=1, years = 0):
     in later years.
     '''
 
-
-
-
     #creates n new data points as specified by the number of years submitted by the end user
     increase = x[len(x)-1]/x[len(x)-2]
     for i in range(years):
@@ -311,5 +307,3 @@ def predictingTheFuture(month=1, years = 0):
     plt.show()
 
 
-
-predictingTheFuture(month=1,years=10)

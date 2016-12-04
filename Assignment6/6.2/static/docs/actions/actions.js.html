@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width" charset="utf-8">
-    <title>mr-doc</title>
+    <title>Assignment6_Erlend_Westbye</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/cayman.min.css">
     <link rel="stylesheet" href="../css/prism.min.css">
@@ -22,7 +22,7 @@
     </div>
     <header id="overview" class="jumbotron subhead">
       <div class="container">
-        <h1>mr-doc</h1>
+        <h1>Assignment6_Erlend_Westbye</h1>
         <p class="lead"></p>
       </div>
     </header>
@@ -37,125 +37,124 @@
             <li><a href="../containers/6.3/co2.js.html">containers/6.3/co2.js</a></li>
             <li><a href="../containers/6.3/temperature.js.html">containers/6.3/temperature.js</a></li>
             <li><a href="../containers/6.4/co2_contry.js.html">containers/6.4/co2_contry.js</a></li>
+            <li><a href="../containers/6.6/temperature.js.html">containers/6.6/temperature.js</a></li>
             <li><a href="../containers/header.js.html">containers/header.js</a></li>
-            <li><a href="../main.js.html">main.js</a></li>
-            <li><a href="../reducers/co2.js.html">reducers/co2.js</a></li>
-            <li><a href="../reducers/reducers.js.html">reducers/reducers.js</a></li>
-            <li><a href="../reducers/temperature.js.html">reducers/temperature.js</a></li>
-            <li><a href="../server.js.html">server.js</a></li>
-            <li><a href="../webpack.config.js.html">webpack.config.js</a></li>
+            <li><a href="../containers/start.js.html">containers/start.js</a></li>
           </ul>
           <div class="scrollspy">
             <ul class="nav nav-list bs-docs-sidenav affix-top">
+              <li><a href="#return"><i class="alert alert-info"></i><span>return</span></a>
+              </li>
+              <li><a href="#meanTemperature"><i class="alert alert-success"></i><span>meanTemperature</span></a>
+              </li>
             </ul>
           </div>
         </div>
         <div class="span9">
-          <div class="description"></div>
-          <pre><code class="language-javascript">import superagent from 'superagent';
+          <div class="description"><p>This function updates the redux state for temperature and trigger view update</p></div>
+          <pre><code class="language-javascript">export const tempUpdated = (data) =&gt; {
+    // action has two parts
+//
 
-// action has two parts
-// 
-
-//first is the type, these are specified as constants i.e 
+//first is the type, these are specified as constants i.e
 // &quot;SEND_MESSAGE&quot;
 
 //the other one is the payload, or any information that the app
 //needs to have
 
 //the entire function is called the action creator
-
-export const tempUpdated = (data) =&gt; {
     //this returns the action
     console.log(data)
     return {
         type: &quot;TEMPERATURE_UPDATED&quot;, //type of action
         payload: data //payload contains the data that will be passed to the event handler
     }
-}
-
-export const co2Updated = (data) =&gt; {
+}</code></pre>
+          <div class="description"><p>This function updates the redux state for co2 and trigger view update</p></div>
+          <pre><code class="language-javascript">export const co2Updated = (data) =&gt; {
     //this returns the action
     return {
         type: &quot;CO2_UPDATED&quot;, //type of action
         payload: data //payload contains the data that will be passed to the event handler
     }
-}
+}</code></pre>
+          <div class="description"><p>This function is for posting tempreature parameters to the flask api</p></div>
+          <pre><code class="language-javascript">export const getTemperature_Param = (obj) =&gt; {
 
-
-export const getTemperature_Param = (obj) =&gt; {
-
+    //a new object is created, this will be parsed by the flask app
     var dataToSend = {}
 
-    for(var key in obj){
+    for (var key in obj) {
 
         console.log(key)
 
-        if(obj.hasOwnProperty(key)){
+        if (obj.hasOwnProperty(key)) {
 
-                console.log(typeof  obj[key])
+            console.log(typeof  obj[key])
 
 
-                if(obj[key] != undefined){
-                    if(typeof obj[key] == &quot;string&quot;){
-                        if(obj[key].length&gt;0){
-                            dataToSend[key] = obj[key]
-                        }
-                    }
-                    if(typeof obj[key] == &quot;number&quot;){
+            if (obj[key] != undefined) {
+                if (typeof obj[key] == &quot;string&quot;) {
+                    if (obj[key].length &gt; 0) {
                         dataToSend[key] = obj[key]
                     }
                 }
+                if (typeof obj[key] == &quot;number&quot;) {
+                    dataToSend[key] = obj[key]
+                }
+            }
 
 
         }
-    }
+    }</code></pre>
+          <section id="return">
+            <h1>return</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>return()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <div class="description"><p>Posts the data</p></div>
+          <pre><code class="language-javascript">return (dispatch) =&gt; {
+    return superagent.post(&quot;http://localhost:5000/getTemp&quot;).set('Content-Type', 'application/json').send(JSON.stringify(dataToSend)).end((error, response) =&gt; {
+        if (!error &amp;&amp; response) {
+            //localStorage.setItem('response', JSON.stringify(response.body))
 
-    console.log(dataToSend);
+            var inData = JSON.parse(response.text);
+
+            dispatch(tempUpdated(inData))
+
+        } else {
+            console.log('There was an error fetching from GitHub', error);
+        }
+    });
+}
 
 
-    return (dispatch) =&gt; {
-        return superagent.post(&quot;http://localhost:5000/getTemp&quot;).set('Content-Type', 'application/json').send(JSON.stringify(dataToSend)).end((error, response) =&gt; {
-            if (!error &amp;&amp; response) {
-                //localStorage.setItem('response', JSON.stringify(response.body))
-
-                var inData = JSON.parse(response.text);
-
-                dispatch(tempUpdated(inData))
-
-            } else {
-                console.log('There was an error fetching from GitHub', error);
-            }
-        });
-    }
-
-
-
-
-};
-
-export const getCo2_Param = (obj) =&gt; {
+};</code></pre>
+          <div class="description"><p>This function is for posting co2 parameters to the flask api</p></div>
+          <pre><code class="language-javascript">export const getCo2_Param = (obj) =&gt; {
 
     var dataToSend = {}
 
-    for(var key in obj){
+    for (var key in obj) {
 
         console.log(key)
 
-        if(obj.hasOwnProperty(key)){
+        if (obj.hasOwnProperty(key)) {
 
-                console.log(typeof  obj[key])
+            console.log(typeof  obj[key])
 
-                if(obj[key] != undefined){
-                    if(typeof obj[key] == &quot;string&quot;){
-                        if(obj[key].length&gt;0){
-                            dataToSend[key] = obj[key]
-                        }
-                    }
-                    if(typeof obj[key] == &quot;number&quot;){
+            if (obj[key] != undefined) {
+                if (typeof obj[key] == &quot;string&quot;) {
+                    if (obj[key].length &gt; 0) {
                         dataToSend[key] = obj[key]
                     }
                 }
+                if (typeof obj[key] == &quot;number&quot;) {
+                    dataToSend[key] = obj[key]
+                }
+            }
 
 
         }
@@ -178,29 +177,28 @@ export const getCo2_Param = (obj) =&gt; {
             }
         });
     }
-};
-
-
-export const getCo2_Param_Contry = (obj) =&gt; {
+};</code></pre>
+          <div class="description"><p>This function is for posting co2 by contry parameters to the flask api</p></div>
+          <pre><code class="language-javascript">export const getCo2_Param_Contry = (obj) =&gt; {
 
     var dataToSend = {}
 
-    for(var key in obj){
+    for (var key in obj) {
 
-        if(obj.hasOwnProperty(key)){
+        if (obj.hasOwnProperty(key)) {
 
-                console.log(typeof  obj[key])
+            console.log(typeof  obj[key])
 
-                if(obj[key] != undefined){
-                    if(typeof obj[key] == &quot;string&quot;){
-                        if(obj[key].length&gt;0){
-                            dataToSend[key] = obj[key]
-                        }
-                    }
-                    if(typeof obj[key] == &quot;number&quot;){
+            if (obj[key] != undefined) {
+                if (typeof obj[key] == &quot;string&quot;) {
+                    if (obj[key].length &gt; 0) {
                         dataToSend[key] = obj[key]
                     }
                 }
+                if (typeof obj[key] == &quot;number&quot;) {
+                    dataToSend[key] = obj[key]
+                }
+            }
 
 
         }
@@ -221,9 +219,9 @@ export const getCo2_Param_Contry = (obj) =&gt; {
             }
         });
     }
-};
-
-export const getTemperature = (month) =&gt; {
+};</code></pre>
+          <div class="description"><p>This function is for geting tempreature data from the flask api, this function could be replaced by the param version</p></div>
+          <pre><code class="language-javascript">export const getTemperature = (month) =&gt; {
     return (dispatch) =&gt; {
         return superagent.get(&quot;http://localhost:5000/getTemp/&quot; + month).set('Content-Type', 'application/json').end((error, response) =&gt; {
             if (!error &amp;&amp; response) {
@@ -234,36 +232,30 @@ export const getTemperature = (month) =&gt; {
 
                 var label = []
 
-                inData.years.map((year,index)=&gt;{
+                inData.years.map((year, index) =&gt; {
 
-                    if(index % 3 == 0){
+                    if (index % 3 == 0) {
 
                         label.push(year)
 
-                    }else{
+                    } else {
                         label.push(&quot;&quot;)
                     }
 
                 })
 
 
-            
                 dispatch(tempUpdated(inData))
 
 
-
-
-
-                
             } else {
                 console.log('There was an error fetching from GitHub', error);
             }
         });
     }
-};
-
-
-export const getCo2 = () =&gt; {
+};</code></pre>
+          <div class="description"><p>This function is for geting co2 data from the flask api, this function could be replaced by the param version</p></div>
+          <pre><code class="language-javascript">export const getCo2 = () =&gt; {
     return (dispatch) =&gt; {
         return superagent.get(&quot;http://localhost:5000/getCo2&quot;).set('Content-Type', 'application/json').end((error, response) =&gt; {
             if (!error &amp;&amp; response) {
@@ -271,17 +263,88 @@ export const getCo2 = () =&gt; {
 
                 var inData = JSON.parse(response.text)
 
-             
-            
+
                 dispatch(co2Updated(inData))
 
 
-
-
-
-                
             } else {
                 console.log('There was an error fetching from GitHub', error);
+            }
+        });
+    }
+};</code></pre>
+          <div class="description"><p>Due to the rendering of the chart this one unfortunately has to have som logic to create all of the datapoints<br />this is because the color can not be changed from a threshhold.</p><p>This could be done in python, but i feel that it&#39;s better to have a version that can be used by many differendt front ends</p></div>
+          <pre><code class="language-javascript">export const predictTheFuture = (state) =&gt; {
+
+    var years = 100;
+    var month = 1;
+    console.log(state)
+
+    if (state != undefined) {
+        years = state.years;
+        month = state.month
+    }
+
+
+    return (dispatch) =&gt; {
+        return superagent.get(&quot;http://localhost:5000/predictingTheFuture/&quot; + month + &quot;/&quot; + years).set('Content-Type', 'application/json').end((error, response) =&gt; {
+            if (!error &amp;&amp; response) {
+                //localStorage.setItem('response', JSON.stringify(response.body))
+
+                var inData = JSON.parse(response.text)
+
+                console.log(inData.years.indexOf(inData.finalrealyear))
+                var real_cutoff = inData.years.indexOf(inData.finalrealyear)
+
+
+                var real_years = inData.years.slice(0, real_cutoff + 1)
+                var real_temperatures = inData.meanTemperature.slice(0, real_cutoff + 1)
+
+                var predicion_years = inData.years.slice(real_cutoff + 1)
+                var prediction_temperatures = inData.meanTemperature.slice(real_cutoff + 1)</code></pre>
+          <section id="meanTemperature">
+            <h1>meanTemperature</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">property</div><span>&nbsp;</span><span>inData.meanTemperature</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <div class="description"><p>inData.years = real_years;</p></div>
+          <pre><code class="language-javascript">inData.meanTemperature = real_temperatures;
+
+var real_scatter = []
+
+
+for (var i = 0; i &lt; inData.meanTemperature.length; i++) {
+
+    var scatterpiont = {x: real_years[i], y: real_temperatures[i]}
+
+    real_scatter.push(scatterpiont)
+
+}
+
+var predicted_scatter = []
+
+
+for (var i = 0; i &lt; inData.meanTemperature.length; i++) {
+
+    var scatterpiont = {x: predicion_years[i], y: prediction_temperatures[i]}
+
+    predicted_scatter.push(scatterpiont)
+
+}
+
+console.log(real_scatter)
+
+
+inData.meanTemperature = real_scatter
+inData.predictedMeanTemperatures = predicted_scatter
+
+
+dispatch(tempUpdated(inData))
+
+            } else {
+console.log('There was an error fetching from GitHub', error);
             }
         });
     }
